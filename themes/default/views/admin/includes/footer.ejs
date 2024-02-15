@@ -1,0 +1,1778 @@
+<div class="spacer-40"></div>
+
+<footer id="footer-main" class="footer-sticky">
+    <div class="footer-main-inner">
+        <div class="pull-left hidden-xs">
+            <p>© <a href="https://github.com/hdrezkaby/CinemaPress" target="_blank">CinemaPress</a></p>
+        </div>
+        <div class="pull-left visible-xs">
+            <p>© <a href="https://github.com/hdrezkaby/CinemaPress" target="_blank">CP</a></p>
+        </div>
+        <div class="pull-right">
+            <a href="javascript:void(0)" class="btn btn-info" id="save">
+                <span class="fa fa-save"></span>&nbsp;&nbsp;
+                <%= __('Сохранить изменения') %>
+            </a>
+            <a href="javascript:void(0)" class="btn" id="toggle-footer"> <i class="fa fa-chevron-down"></i> </a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var i = 0;
+
+        var status = document.querySelectorAll('.module-status');
+        if (status)
+            for (i = 0; i < status.length; i++)
+                status[i].addEventListener('click', statusData);
+
+        var save = document.querySelector('#save');
+        if (save)
+            save.addEventListener('click', saveData);
+
+        var restart = document.querySelector('#restart');
+        if (restart)
+            restart.addEventListener('click', restartData);
+
+        var flush = document.querySelector('#flush');
+        if (flush)
+            flush.addEventListener('click', flushData);
+
+        var flush_memcached = document.querySelector('#flush_memcached');
+        if (flush_memcached)
+            flush_memcached.addEventListener('click', flushMemcachedData);
+
+        var reload_movies = document.querySelector('#reload_movies');
+        if (reload_movies)
+            reload_movies.addEventListener('click', reloadMoviesData);
+
+        var movies_cron = document.querySelector('#movies_cron');
+        if (movies_cron)
+            movies_cron.addEventListener('click', moviesCronData);
+
+        var movies_cron_stop = document.querySelector('#movies_cron_stop');
+        if (movies_cron_stop)
+            movies_cron_stop.addEventListener('click', moviesCronStopData);
+
+        var movies_zero_rt = document.querySelector('#movies_zero_rt');
+        if (movies_zero_rt)
+            movies_zero_rt.addEventListener('click', moviesZeroRtData);
+
+        var movies_saved = document.querySelector('#movies_saved');
+        if (movies_saved)
+            movies_saved.addEventListener('click', saveData);
+
+        var del = document.querySelectorAll('.del');
+        if (del)
+            for (i = 0; i < del.length; i++)
+                del[i].addEventListener('click', delData);
+
+        var suc = document.querySelectorAll('.suc');
+        if (suc)
+            for (i = 0; i < suc.length; i++)
+                suc[i].addEventListener('click', sucData);
+
+        var addId = document.querySelectorAll('a[data-add-name]');
+        if (addId)
+            for (i = 0; i < addId.length; i++)
+                addId[i].addEventListener('click', addIdList);
+
+        var delId = document.querySelectorAll('li[data-delete-name]');
+        if (delId)
+            for (i = 0; i < delId.length; i++)
+                delId[i].addEventListener('click', delIdList);
+
+        alertCP();
+
+        inputData();
+
+        uploadFile();
+
+        translit();
+
+    });
+
+    function statusData() {
+
+        var self = this;
+        self.removeEventListener('click', statusData);
+        self.innerHTML = '<span class="fa fa-spinner fa-spin"></span>&nbsp;&nbsp;<%= __('
+        И з меняет ся ст а т ус ') %>';
+
+        var data = {
+            'switch': {
+                'module': self.dataset.module,
+                'status': self.dataset.status
+            }
+        };
+
+        sendServer(data, function(err, result) {
+            if (err) {
+                self.innerHTML = '<span class="fa fa-bug"></span>&nbsp;&nbsp;' + err;
+            } else {
+                var href = window.location.href.replace(/\?reload=.*/ig, '').replace(/&reload=.*/ig, '');
+                window.location.href = href + (href.indexOf('?') + 1 ? '&' : '?') + 'reload=' + Math.random().toString(36).substr(2, 5);
+            }
+        });
+
+    }
+
+    function restartData() {
+
+        var self = this;
+        self.removeEventListener('click', restartData);
+        self.innerHTML = '<span class="fa fa-spinner fa-spin"></span>&nbsp;&nbsp;<%= __('
+        Перез а груж а ет ся ') %>';
+
+        var data = {
+            'restart': true
+        };
+
+        sendServer(data, function() {
+            setTimeout(function() {
+                self.innerHTML = '<span class="fa fa-redo-alt"></span>&nbsp;&nbsp;<%= __('
+                Перез а груз ит ь ') %>';
+                self.addEventListener('click', restartData);
+            }, 25000);
+        });
+
+    }
+
+    function flushData() {
+
+        var self = this;
+        self.removeEventListener('click', flushData);
+        self.innerHTML = '<span class="fa fa-sync-alt fa-spin"></span>&nbsp;&nbsp;<%= __('
+        Оч ищ а ет ся кэш ') %>';
+
+        var data = {
+            'flush': true
+        };
+
+        var stop = false;
+
+        sendServer(data, function(err, result) {
+            stop = true;
+            if (err) {
+                self.innerHTML = '<span class="fa fa-bug"></span>&nbsp;&nbsp;' + err;
+            } else {
+                self.innerHTML = '<span class="fa fa-trash"></span>&nbsp;&nbsp;<%= __('
+                Оч ист ит ь кэш ') %>';
+                self.addEventListener('click', flushData);
+            }
+        });
+
+        setTimeout(function() {
+            if (stop) return;
+            var href = window.location.href.replace(/\?reload=.*/ig, '').replace(/&reload=.*/ig, '');
+            window.location.href = href + (href.indexOf('?') + 1 ? '&' : '?') + 'reload=' + Math.random().toString(36).substr(2, 5);
+        }, 25000);
+    }
+
+    function flushMemcachedData() {
+
+        var self = this;
+        self.removeEventListener('click', flushMemcachedData);
+        self.innerHTML = '<i class="fa fa-sync-alt fa-spin"></i>';
+
+        var data = {
+            'flush_memcached': true
+        };
+
+        var stop = false;
+
+        sendServer(data, function(err, result) {
+            stop = true;
+            if (err) {
+                self.innerHTML = '<i class="fa fa-bug"></i>';
+            } else {
+                self.innerHTML = '<i class="fa fa-tachometer-alt"></i>';
+                self.addEventListener('click', flushMemcachedData);
+            }
+        });
+
+        setTimeout(function() {
+            if (stop) return;
+            var href = window.location.href.replace(/\?reload=.*/ig, '').replace(/&reload=.*/ig, '');
+            window.location.href = href + (href.indexOf('?') + 1 ? '&' : '?') + 'reload=' + Math.random().toString(36).substr(2, 5);
+        }, 25000);
+
+    }
+
+    function reloadMoviesData() {
+
+        var self = this;
+        self.removeEventListener('click', reloadMoviesData);
+        self.innerHTML = '<i class="fa fa-sync-alt fa-spin"></i>';
+
+        var data = {
+            'flush_memcached': true
+        };
+
+        var stop = false;
+
+        sendServer(data, function(err, result) {
+            stop = true;
+            if (err) {
+                self.innerHTML = '<i class="fa fa-bug"></i>';
+            } else {
+                self.innerHTML = '<i class="fa fa-sync-alt"></i>';
+                self.addEventListener('click', reloadMoviesData);
+                var href = window.location.href.replace(/\?reload=.*/ig, '').replace(/&reload=.*/ig, '');
+                window.location.href = href + (href.indexOf('?') + 1 ? '&' : '?') + 'reload=' + Math.random().toString(36).substr(2, 5);
+            }
+        });
+
+        setTimeout(function() {
+            if (stop) return;
+            var href = window.location.href.replace(/\?reload=.*/ig, '').replace(/&reload=.*/ig, '');
+            window.location.href = href + (href.indexOf('?') + 1 ? '&' : '?') + 'reload=' + Math.random().toString(36).substr(2, 5);
+        }, 25000);
+
+    }
+
+    function moviesCronData() {
+
+        var self = this;
+        self.removeEventListener('click', moviesCronData);
+        self.innerHTML = '<i class="fa fa-sync-alt fa-spin"></i>';
+
+        var data = {
+            'movies_cron': true
+        };
+
+        var stop = false;
+
+        sendServer(data, function(err, result) {
+            stop = true;
+            if (err) {
+                self.innerHTML = '<i class="fa fa-bug"></i>';
+            } else {
+                self.innerHTML = '<span class="fa fa-check"></span>';
+                setTimeout(function() {
+                    self.innerHTML = '<i class="fas fa-receipt"></i>&nbsp;&nbsp;<%= __('
+                    З а пуст ит ь пол уч ение инф орма ц ии ')  %>';
+                    self.addEventListener('click', moviesCronData);
+                }, 60000);
+            }
+        });
+
+        setTimeout(function() {
+            if (stop) return;
+            var href = window.location.href.replace(/\?reload=.*/ig, '').replace(/&reload=.*/ig, '');
+            window.location.href = href + (href.indexOf('?') + 1 ? '&' : '?') + 'reload=' + Math.random().toString(36).substr(2, 5);
+        }, 25000);
+
+    }
+
+    function moviesCronStopData() {
+
+        var self = this;
+        self.removeEventListener('click', moviesCronStopData);
+        self.innerHTML = '<i class="fa fa-sync-alt fa-spin"></i>';
+
+        var data = {
+            'movies_cron_stop': true
+        };
+
+        var stop = false;
+
+        sendServer(data, function(err, result) {
+            stop = true;
+            if (err) {
+                self.innerHTML = '<i class="fa fa-bug"></i>';
+            } else {
+                self.innerHTML = '<span class="fa fa-check"></span>';
+                setTimeout(function() {
+                    self.innerHTML = '<i class="fas fa-hand-paper"></i>&nbsp;&nbsp;<%= __('
+                    Ост а новит ь пол уч ение инф орма ц ии ')  %>';
+                    self.addEventListener('click', moviesCronStopData);
+                }, 60000);
+            }
+        });
+
+        setTimeout(function() {
+            if (stop) return;
+            var href = window.location.href.replace(/\?reload=.*/ig, '').replace(/&reload=.*/ig, '');
+            window.location.href = href + (href.indexOf('?') + 1 ? '&' : '?') + 'reload=' + Math.random().toString(36).substr(2, 5);
+        }, 25000);
+
+    }
+
+    function moviesZeroRtData() {
+
+        var r = prompt('This will delete all movies from your database! Please enter your domain «<%- config.domain.toLowerCase() %>»:');
+        if (!r || r !== '<%- config.domain.toLowerCase() %>') {
+            return;
+        }
+
+        var self = this;
+        self.removeEventListener('click', moviesZeroRtData);
+        self.innerHTML = '<i class="fa fa-sync-alt fa-spin"></i>';
+
+        var data = {
+            'movies_zero_rt': true
+        };
+
+        saveData();
+        setTimeout(function() {
+            sendServer(data, function(err, result) {});
+        }, 5000);
+
+        setTimeout(function() {
+            self.innerHTML = '<span class="fa fa-check"></span>';
+            alert('Restart page 2 times.');
+        }, 10000);
+
+    }
+
+    function delData() {
+
+        var self = this;
+        self.removeEventListener('click', delData);
+        self.innerHTML = '<span class="fa fa-spinner fa-spin"></span>';
+
+        var data = {};
+        data.delete = true;
+        data[self.dataset.type] = {};
+        if (self.dataset.type === 'collection') {
+            data[self.dataset.type].url = self.dataset.id;
+        } else {
+            data[self.dataset.type].id = self.dataset.id;
+        }
+
+        sendServer(data, function(err, result) {
+            if (err) {
+                self.innerHTML = '<span class="fa fa-bug"></span>&nbsp;&nbsp;' + err;
+            } else {
+                self.innerHTML = '<span class="fa fa-check"></span>';
+            }
+        });
+
+    }
+
+    function sucData() {
+
+        var self = this;
+        self.removeEventListener('click', sucData);
+        self.innerHTML = '<span class="fa fa-spinner fa-spin"></span>';
+
+        var comment_confirm = self.className.indexOf('suc-one') + 1 ? 0 : 1;
+        self.className = self.className.replace(comment_confirm ? 'suc-zero' : 'suc-one', comment_confirm ? 'suc-one' : 'suc-zero');
+
+        var data = {};
+        data[self.dataset.type] = {};
+        data[self.dataset.type].id = self.dataset.id;
+        data[self.dataset.type].comment_confirm = '' + comment_confirm;
+
+        sendServer(data, function(err, result) {
+            if (err) {
+                self.innerHTML = '<span class="fa fa-bug"></span>&nbsp;&nbsp;' + err;
+            } else {
+                self.innerHTML = '<span class="fa fa-circle ' + (comment_confirm ? 'text-success' : 'text-muted') + '"></span>';
+            }
+            self.addEventListener('click', sucData);
+        });
+
+    }
+
+    function delIdList() {
+        var self = this;
+        self.parentNode.removeChild(self);
+        var list = document.querySelector('textarea[name="' + self.dataset.deleteName + '"]');
+        var first = new RegExp('^' + self.dataset.deleteId + ',');
+        var middle = new RegExp(',' + self.dataset.deleteId + ',|^' + self.dataset.deleteId + '$');
+        var last = new RegExp(',' + self.dataset.deleteId + '$');
+        list.value = list.value
+            .replace(middle, ',')
+            .replace(first, '')
+            .replace(last, '')
+            .replace(/\s/g, '')
+            .replace(/,+/g, ',')
+            .replace(/(^,*)|(,*)$/g, '');
+    }
+
+    function addIdList() {
+        var self = this;
+        var id = document.querySelector('input[data-add-id="' + self.dataset.addName + '"]');
+        var kp_id = parseInt(id.value);
+        var id_kp = 0;
+
+        if (id.value.indexOf('<%- config.domain %>') + 1) {
+
+            var prefix_id = '<%- config.urls.prefix_id %>' || '/';
+            var regexpId = new RegExp(prefix_id + '([0-9]{1,10})', 'ig');
+            var execId = regexpId.exec(id.value);
+            id_kp = (execId) ? parseInt(execId[1]) : 0;
+
+            kp_id = parseInt(id_kp) - parseInt(<%- config.urls.unique_id %>);
+        } else if (id.value.indexOf('kinopoisk.ru') + 1) {
+            id_kp = /(film\/|movie\/|series\/).*?([0-9]{3,10})\//gi.exec(id.value);
+            kp_id = (id_kp) ? parseInt(id_kp[2]) : 0;
+        }
+
+        if (kp_id) {
+            var addPoster = document.querySelector('ul[data-add-name="' + self.dataset.addName + '"]');
+            var addList = document.querySelector('textarea[name="' + self.dataset.addName + '"]');
+            var ids = addList.value.split(',');
+            ids = (ids.length && ids[0]) ? ids.map(function(id) {
+                return parseInt(id);
+            }) : [];
+            if (!(ids.indexOf(kp_id) + 1)) {
+                if (id.dataset.last) {
+                    ids.push(kp_id);
+                } else {
+                    ids.unshift(kp_id);
+                }
+                addList.value = ids.join(',');
+                addPoster.innerHTML = (id.dataset.last ? addPoster.innerHTML : '') + '<li data-delete-id="' + kp_id + '" data-delete-name="' + self.dataset.addName + '"><img class="media-object" src="/<%- config.urls.admin %>/poster?id=' + kp_id + '" data-src="/<%- config.urls.admin %>/poster?id=' + kp_id + '" alt="ID: ' + kp_id + '" title="ID: ' + kp_id + '"></li>' + (!id.dataset.last ? addPoster.innerHTML : '');
+                var delId = document.querySelectorAll('li[data-delete-name]');
+                if (delId)
+                    for (var i = 0; i < delId.length; i++) {
+                        delId[i].addEventListener('click', delIdList);
+                    }
+            }
+        }
+
+        id.value = '';
+    }
+
+    function arrayUnique(array) {
+        var a = array.concat();
+        for (var i = 0; i < a.length; ++i) {
+            for (var j = i + 1; j < a.length; ++j) {
+                if (a[i] === a[j])
+                    a.splice(j--, 1);
+            }
+        }
+
+        return a.filter(Boolean);
+    }
+
+    function saveData() {
+
+        var configs = document.querySelectorAll('input[name],select[name],textarea[name]');
+
+        if (!configs || !configs.length) return false;
+
+        var movies_saved_data = false;
+        if (this && this.innerHTML && this.innerHTML.indexOf('.json') + 1) {
+            movies_saved_data = true;
+        }
+
+        var self = this;
+        self.removeEventListener('click', saveData);
+        self.innerHTML = '<span class="fa fa-spinner fa-spin"></span>&nbsp;&nbsp;<%= __('
+        Сох ра няют ся из менения ') %>';
+
+        var data = {};
+
+        if (movies_saved_data) {
+            self.innerHTML = '<i class="fa fa-sync-alt fa-spin"></i>';
+            data.movies_saved = true;
+        }
+
+        for (var i = 0; i < configs.length; i++) {
+
+            if (configs[i].getAttribute('type')) {
+                if (configs[i].getAttribute('type') === 'checkbox' && !configs[i].checked) {
+                    continue;
+                } else if (configs[i].getAttribute('type') === 'radio' && !configs[i].checked) {
+                    continue;
+                }
+            }
+
+            if (!configs[i].value) {
+                var empty_config = [
+                    'config.database.host',
+                    'config.database.port',
+                    'config.database.all_movies',
+                    'config.subdomain',
+                    'config.bomain',
+                    'config.botdomain',
+                    'config.alt.bomain',
+                    'config.alt.botdomain',
+                    'config.ru.domain',
+                    'config.ru.subdomain',
+                    'config.ru.bomain',
+                    'config.ru.botdomain',
+                    'config.botdomains',
+                    'config.bots',
+                    'config.mirrors',
+                    'config.rotate.list',
+                    'config.rotate.area',
+                    'config.defense.domain_ex',
+                    'config.dns.cloudflare.email',
+                    'config.dns.cloudflare.key',
+                    'config.homepage',
+                    'config.codes.head',
+                    'config.codes.footer',
+                    'config.default.donotuse',
+                    'config.default.tags.list',
+                    'config.publish.required',
+                    'config.publish.thematic.country',
+                    'config.publish.thematic.genre',
+                    'config.publish.thematic.year',
+                    'config.publish.thematic.type',
+                    'config.publish.thematic.actor',
+                    'config.publish.thematic.director',
+                    'config.publish.thematic.query_id',
+                    'config.publish.thematic.search',
+                    'config.publish.indexing.condition',
+                    'config.index.count.sorting',
+                    'config.index.country.keys',
+                    'config.index.genre.keys',
+                    'config.index.year.keys',
+                    'config.index.type.keys',
+                    'config.index.actor.keys',
+                    'config.index.director.keys',
+                    'config.index.ids.keys',
+                    'config.index.count.key',
+                    'config.urls.prefix_id',
+                    'config.urls.noindex',
+                    'config.urls.translit_from',
+                    'config.urls.translit_to',
+                    'config.urls.movies.online',
+                    'config.urls.movies.download',
+                    'config.urls.movies.trailer',
+                    'config.urls.movies.picture',
+                    'config.redirect.from',
+                    'config.redirect.to',
+                    'config.geolite2.countries',
+                    'config.geolite2.ips',
+                    'config.l.legal',
+                    'config.cache.ver',
+                    'config.movies.id',
+                    'config.movies.cron',
+                    'config.movies.proxy',
+                    'config.movies.skip',
+                    'config.movies.cookies',
+                    'config.default.sorting_search',
+                    'config.default.people_image_domain',
+                    'config.default.types.anime_country',
+                    'config.sorting.kinopoisk-rating-up',
+                    'config.sorting.kinopoisk-rating-down',
+                    'config.sorting.imdb-rating-up',
+                    'config.sorting.imdb-rating-down',
+                    'config.sorting.kinopoisk-vote-up',
+                    'config.sorting.kinopoisk-vote-down',
+                    'config.sorting.imdb-vote-up',
+                    'config.sorting.imdb-vote-down',
+                    'config.sorting.year-up',
+                    'config.sorting.year-down',
+                    'config.sorting.premiere-up',
+                    'config.sorting.premiere-down'
+                ];
+                var empty_module = [
+                    'modules.comments.data.cackle.id',
+                    'modules.comments.data.cackle.siteApiKey',
+                    'modules.comments.data.cackle.accountApiKey',
+                    'modules.comments.data.hypercomments.widget_id',
+                    'modules.comments.data.hypercomments.sekretkey',
+                    'modules.comments.data.disqus.shortname',
+                    'modules.comments.data.disqus.api_key',
+                    'modules.comments.data.facebook.admins',
+                    'modules.comments.data.vk.app_id',
+                    'modules.comments.data.sigcomments.host_id',
+                    'modules.comments.data.fast.message',
+                    'modules.comments.data.fast.question',
+                    'modules.comments.data.fast.question_yes',
+                    'modules.comments.data.fast.question_not',
+                    'modules.comments.data.fast.recaptcha_secret',
+                    'modules.comments.data.fast.recaptcha_sitekey',
+                    'modules.comments.data.fast.stopworls',
+                    'modules.comments.data.fast.blacklist',
+                    'modules.slider.data.url',
+                    'modules.abuse.data.imap.user',
+                    'modules.abuse.data.imap.password',
+                    'modules.abuse.data.imap.host',
+                    'modules.abuse.data.imap.from',
+                    'modules.abuse.data.imap.subdomain',
+                    'modules.abuse.data.smtp.auth.user',
+                    'modules.abuse.data.smtp.auth.pass',
+                    'modules.abuse.data.smtp.host',
+                    'modules.abuse.data.smtp.dkim',
+                    'modules.abuse.data.smtp.message',
+                    'modules.abuse.data.movies',
+                    'modules.abuse.data.turbo',
+                    'modules.abuse.data.whois',
+                    'modules.abuse.data.ips',
+                    'modules.soon.data.movies',
+                    'modules.social.data.vk',
+                    'modules.social.data.facebook',
+                    'modules.social.data.twitter',
+                    'modules.social.data.telegram',
+                    'modules.social.data.instagram',
+                    'modules.social.data.youtube',
+                    'modules.related.data.display',
+                    'modules.related.data.types.year.name',
+                    'modules.related.data.types.genre.name',
+                    'modules.related.data.types.country.name',
+                    'modules.related.data.types.actor.name',
+                    'modules.related.data.types.director.name',
+                    'modules.player.data.custom',
+                    'modules.player.data.embed.dataset',
+                    'modules.player.data.cinemaplayer.information.dataset',
+                    'modules.player.data.cinemaplayer.information.api',
+                    'modules.player.data.cinemaplayer.online.dataset',
+                    'modules.player.data.cinemaplayer.online.api',
+                    'modules.player.data.cinemaplayer.trailer.dataset',
+                    'modules.player.data.cinemaplayer.trailer.api',
+                    'modules.player.data.cinemaplayer.download.dataset',
+                    'modules.player.data.cinemaplayer.download.api',
+                    'modules.player.data.cinemaplayer.picture.dataset',
+                    'modules.player.data.cinemaplayer.picture.api',
+                    'modules.content.data.custom',
+                    'modules.episode.data.custom',
+                    'modules.episode.data.index.custom',
+                    'modules.blocking.data.share.message',
+                    'modules.blocking.data.sub.keys',
+                    'modules.blocking.data.sub.message',
+                    'modules.blocking.data.adv.code',
+                    'modules.blocking.data.adv.message',
+                    'modules.blocking.data.adv.skip',
+                    'modules.blocking.data.adblock.message',
+                    'modules.blocking.data.legal.countries',
+                    'modules.blocking.data.legal.message',
+                    'modules.blocking.data.app.message',
+                    'modules.blocking.data.app.download.windows',
+                    'modules.blocking.data.app.download.macos',
+                    'modules.blocking.data.app.download.linux',
+                    'modules.blocking.data.app.safe.windows',
+                    'modules.blocking.data.app.safe.macos',
+                    'modules.blocking.data.app.safe.linux',
+                    'modules.blocking.data.app.instruction.windows',
+                    'modules.blocking.data.app.instruction.macos',
+                    'modules.blocking.data.app.instruction.linux',
+                    'modules.blocking.data.app.countries',
+                    'modules.episode.data.default',
+                    'modules.episode.data.translate',
+                    'modules.episode.data.index.name',
+                    'modules.content.data.news.tags',
+                    'modules.content.data.index.url',
+                    'modules.content.data.movie.tags',
+                    'modules.content.data.scraper',
+                    'modules.bots.data.token',
+                    'modules.random.data.category',
+                    'modules.random.data.menu',
+                    'modules.schema.data.faq.title',
+                    'modules.schema.data.faq.category.question1',
+                    'modules.schema.data.faq.category.question2',
+                    'modules.schema.data.faq.category.question3',
+                    'modules.schema.data.faq.category.question4',
+                    'modules.schema.data.faq.category.answer1',
+                    'modules.schema.data.faq.category.answer2',
+                    'modules.schema.data.faq.category.answer3',
+                    'modules.schema.data.faq.category.answer4',
+                    'modules.schema.data.faq.index.question1',
+                    'modules.schema.data.faq.index.question2',
+                    'modules.schema.data.faq.index.question3',
+                    'modules.schema.data.faq.index.question4',
+                    'modules.schema.data.faq.index.answer1',
+                    'modules.schema.data.faq.index.answer2',
+                    'modules.schema.data.faq.index.answer3',
+                    'modules.schema.data.faq.index.answer4',
+                    'modules.schema.data.faq.movie.question1',
+                    'modules.schema.data.faq.movie.question2',
+                    'modules.schema.data.faq.movie.question3',
+                    'modules.schema.data.faq.movie.question4',
+                    'modules.schema.data.faq.movie.answer1',
+                    'modules.schema.data.faq.movie.answer2',
+                    'modules.schema.data.faq.movie.answer3',
+                    'modules.schema.data.faq.movie.answer4',
+                    'modules.api.data.tokens'
+                ];
+                if (
+                    configs[i].name === 'collection.image'
+                ) {
+                    console.log(configs[i].name, 'empty collection.');
+                } else if (
+                    configs[i].name === 'comment.comment_admin'
+                ) {
+                    console.log(configs[i].name, 'empty comment.');
+                } else if (
+                    configs[i].name.indexOf('movie.') + 1
+                ) {
+                    console.log(configs[i].name, 'empty movie.');
+                } else if (
+                    empty_config.indexOf(configs[i].name) + 1
+                ) {
+                    console.log(configs[i].name, 'empty config.');
+                } else if (
+                    empty_module.indexOf(configs[i].name) + 1 ||
+                    configs[i].name.indexOf('modules.adv.data.desktop') + 1 ||
+                    configs[i].name.indexOf('modules.adv.data.mobile') + 1 ||
+                    configs[i].name.indexOf('modules.content.data.auto') + 1
+                ) {
+                    console.log(configs[i].name, 'empty modules.');
+                } else {
+                    continue;
+                }
+            }
+
+            var objects = configs[i].name.split('.');
+
+            for (var j = 1; j <= objects.length; j++) {
+
+                if (j === 1) {
+                    data[objects[0]] = (j === objects.length) ?
+                        (data[objects[0]]) ?
+                        data[objects[0]] + ',' + configs[i].value :
+                        configs[i].value :
+                        data[objects[0]] || {};
+                } else if (j === 2) {
+                    data[objects[0]][objects[1]] = (j === objects.length) ?
+                        (data[objects[0]][objects[1]]) ?
+                        data[objects[0]][objects[1]] + ',' + configs[i].value :
+                        configs[i].value :
+                        data[objects[0]][objects[1]] || {};
+                } else if (j === 3) {
+                    data[objects[0]][objects[1]][objects[2]] = (j === objects.length) ?
+                        (data[objects[0]][objects[1]][objects[2]]) ?
+                        data[objects[0]][objects[1]][objects[2]] + ',' + configs[i].value :
+                        configs[i].value :
+                        data[objects[0]][objects[1]][objects[2]] || {};
+                } else if (j === 4) {
+                    data[objects[0]][objects[1]][objects[2]][objects[3]] = (j === objects.length) ?
+                        (data[objects[0]][objects[1]][objects[2]][objects[3]]) ?
+                        data[objects[0]][objects[1]][objects[2]][objects[3]] + ',' + configs[i].value :
+                        configs[i].value :
+                        data[objects[0]][objects[1]][objects[2]][objects[3]] || {};
+                } else if (j === 5) {
+                    data[objects[0]][objects[1]][objects[2]][objects[3]][objects[4]] = (j === objects.length) ?
+                        (data[objects[0]][objects[1]][objects[2]][objects[3]][objects[4]]) ?
+                        data[objects[0]][objects[1]][objects[2]][objects[3]][objects[4]] + ',' + configs[i].value :
+                        configs[i].value :
+                        data[objects[0]][objects[1]][objects[2]][objects[3]][objects[4]] || {};
+                } else if (j === 6) {
+                    data[objects[0]][objects[1]][objects[2]][objects[3]][objects[4]][objects[5]] = (j === objects.length) ?
+                        (data[objects[0]][objects[1]][objects[2]][objects[3]][objects[4]][objects[5]]) ?
+                        data[objects[0]][objects[1]][objects[2]][objects[3]][objects[4]][objects[5]] + ',' + configs[i].value :
+                        configs[i].value :
+                        data[objects[0]][objects[1]][objects[2]][objects[3]][objects[4]][objects[5]] || {};
+                }
+
+            }
+
+        }
+
+        if (data.content && data.content.content_movies && data.content.content_movies.split(',').length > 100) {
+            // self.innerHTML = '<span class="fa fa-exclamation-triangle text-danger"></span>&nbsp;&nbsp;<%= __('Желательно не больше 100 фильмов') %>';
+        }
+
+        var noMore = 0;
+        if (data.content && data.content.content_tags && data.content.content_tags.indexOf('NoMore') + 1) {
+            data.content.content_tags.split(',').forEach(function(tag) {
+                if (tag.indexOf('NoMore') + 1) {
+                    noMore = parseInt(tag.replace(/[^0-9]/g, '') || '200');
+                }
+            });
+        }
+
+        if (noMore && data.content && data.content.content_movies && data.content.content_movies.split(',').length > noMore) {
+            data.content.content_movies = data.content.content_movies.split(',').slice(0, noMore);
+        }
+
+        if (!noMore && data.content && data.content.content_movies && data.content.content_movies.split(',').length > 200) {
+            data.content.content_tags =
+                data.content.content_tags.indexOf('NoSorting') + 1 ?
+                data.content.content_tags :
+                data.content.content_tags ?
+                data.content.content_tags + ',NoSorting' :
+                'NoSorting';
+        }
+
+        if (data.movie && data.movie.id && data.movie.kp_id && data.movie.id !== data.movie.kp_id) {
+            data.movie.id = data.movie.kp_id;
+        }
+
+        if (data.movie && data.movie.poster) {
+            if (
+                data.movie.poster &&
+                data.movie.poster.toLowerCase().indexOf('/st.kp.') + 1
+            ) {
+                data.movie.poster = '1';
+            } else if (
+                /^.*?avatars\.mds\.yandex\.net\/(get-kinopoisk-image|get-kino-vod-films-gallery)\/([0-9]*)\/([a-z0-9\-]*)\/[0-9x_]*$/i.test(
+                    data.movie.poster
+                )
+            ) {
+                data.movie.poster = data.movie.poster.replace(
+                    /^.*?avatars\.mds\.yandex\.net\/(get-kinopoisk-image|get-kino-vod-films-gallery)\/([0-9]*)\/([a-z0-9\-]*)\/[0-9x_]*$/i,
+                    '/$1-$2-$3'
+                );
+            } else if (
+                /^.*?media-amazon\.com\/images\/[a-z0-9]\/([a-z0-9@.,_\-]*)$/i.test(
+                    data.movie.poster
+                )
+            ) {
+                data.movie.poster = data.movie.poster.replace(
+                    /^.*?media-amazon\.com\/images\/[a-z0-9]\/([a-z0-9@.,_\-]*)$/i,
+                    '/$1'
+                );
+            } else if (
+                /^.*?static\.tvmaze\.com\/uploads\/images\/[a-z_]*\/([0-9]*)\/([0-9]*)\.([a-z0-9]*)$/i.test(
+                    data.movie.poster
+                )
+            ) {
+                data.movie.poster = data.movie.poster.replace(
+                    /^.*?static\.tvmaze\.com\/uploads\/images\/[a-z_]*\/([0-9]*)\/([0-9]*)\.([a-z0-9]*)$/i,
+                    '/$1-$2.$3'
+                );
+            } else if (
+                /^.*?shikimori\.one\/system\/(animes|mangas)\/([a-z0-9]+)\/([a-z0-9]+)\.([a-z0-9]+)[?0-9]*$/i.test(
+                    data.movie.poster
+                )
+            ) {
+                data.movie.poster = data.movie.poster.replace(
+                    /^.*?shikimori\.one\/system\/(animes|mangas)\/([a-z0-9]+)\/([a-z0-9]+)\.([a-z0-9]+)[?0-9]*$/i,
+                    '/$1-original-$3.$4'
+                );
+            }
+        }
+
+        if (data.movie && data.movie.pictures) {
+            if (
+                data.movie.pictures.indexOf('shikimori.one/system/screenshots') + 1
+            ) {
+                data.movie.pictures = data.movie.pictures.split(',').map(function(picture) {
+                    if (
+                        /^.*?shikimori\.one\/system\/screenshots\/[a-z0-9]+\/([a-z0-9]+)\.([a-z0-9]+)[?0-9]*$/i.test(
+                            picture.trim()
+                        )
+                    ) {
+                        return picture.trim().replace(
+                            /^.*?shikimori\.one\/system\/screenshots\/[a-z0-9]+\/([a-z0-9]+)\.([a-z0-9]+)[?0-9]*$/i,
+                            '/screenshots-original-$1.$2'
+                        )
+                    } else {
+                        return false;
+                    }
+                }).filter(Boolean).join(',');
+            }
+            if (
+                data.movie.pictures.indexOf('avatars.mds.yandex.net') + 1
+            ) {
+                data.movie.pictures = data.movie.pictures.split(',').map(function(picture) {
+                    if (
+                        /^.*?avatars\.mds\.yandex\.net\/(get-kinopoisk-image|get-kino-vod-films-gallery)\/([0-9]*)\/([a-z0-9\-]*)\/[0-9x_]*$/i.test(
+                            picture.trim()
+                        )
+                    ) {
+                        return picture.trim().replace(
+                            /^.*?avatars\.mds\.yandex\.net\/(get-kinopoisk-image|get-kino-vod-films-gallery)\/([0-9]*)\/([a-z0-9\-]*)\/[0-9x_]*$/i,
+                            '/$1-$2-$3'
+                        );
+                    } else {
+                        return picture.trim();
+                    }
+                }).filter(Boolean).join(',');
+            }
+        }
+
+        if (data.movie && data.movie.genre) {
+            data.movie['genre'] = (data.movie['genre'] + '').replace(/\s*&\s*/g, ',');
+            data.movie['genre'] = data.movie['genre']
+                .replace(/Science Fiction/i, 'Sci-Fi')
+                .replace(/Science-Fiction/i, 'Sci-Fi')
+                .replace(/SciFi/i, 'Sci-Fi');
+        }
+
+        if (data.movie && !data.movie.id) {
+            var cst = {};
+            try {
+                cst = data.movie['custom'] ? JSON.parse(data.movie['custom']) : {};
+            } catch (e) {
+                console.error(e);
+            }
+            data.movie.id =
+                (data.movie['kp_id'] && parseInt(data.movie['kp_id'])) ||
+                (!parseInt(data.movie['type']) &&
+                    data.movie['tmdb_id'] &&
+                    parseInt(data.movie['tmdb_id']) &&
+                    parseInt(data.movie['tmdb_id']) + 200000000) ||
+                (data.movie &&
+                    parseInt(data.movie['type']) &&
+                    data.movie['tmdb_id'] &&
+                    parseInt(data.movie['tmdb_id']) &&
+                    parseInt(data.movie['tmdb_id']) + 300000000) ||
+                (data.movie &&
+                    data.movie['imdb_id'] &&
+                    parseInt(data.movie['imdb_id']) &&
+                    parseInt(data.movie['imdb_id']) + 400000000) ||
+                (data.movie &&
+                    data.movie['douban_id'] &&
+                    parseInt(data.movie['douban_id']) &&
+                    parseInt(data.movie['douban_id']) + 600000000) ||
+                (data.movie &&
+                    data.movie['wa_id'] &&
+                    parseInt(data.movie['wa_id']) &&
+                    parseInt(data.movie['wa_id']) + 700000000) ||
+                (data.movie &&
+                    data.movie['tvmaze_id'] &&
+                    parseInt(data.movie['tvmaze_id']) &&
+                    parseInt(data.movie['tvmaze_id']) + 800000000) ||
+                (cst &&
+                    cst['movie_id'] &&
+                    parseInt(cst['movie_id']) &&
+                    parseInt(cst['movie_id']) + 900000000) || 0;
+        }
+
+        if (data.movie && data.movie.player) {
+            data.movie.player = data.movie.player.replace(/.*src="(.*?)".*/i, '$1');
+            data.movie.player = data.movie.player.replace(/.*youtube.com\/watch\?v=(.*?).*?/i, 'https://www.youtube.com/embed/$1');
+            data.movie.player = data.movie.player.replace(/\s?\n\s?/ig, ',').replace(/,,/ig, ',');
+        }
+
+        if (data.content && data.content.content_description) {
+            data.content.content_description = data.content.content_description.replace(/\n/ig, '<br>');
+        }
+
+        if (data.movie && data.movie.actor) {
+            data.movie.actor = data.movie.actor.replace(/\n/ig, ',').replace(/\s?,\s?/ig, ',').replace(/,,/ig, ',');
+        }
+
+        if (data.movie && data.movie.description) {
+            data.movie.description = data.movie.description.replace(/\n/ig, '<br>');
+        }
+
+        if (data.modules && data.modules.abuse && data.modules.abuse.data.smtp.message) {
+            data.modules.abuse.data.smtp.message = data.modules.abuse.data.smtp.message.replace(/\n/ig, '<br>');
+        }
+
+        if (data.modules && data.modules.blocking && data.modules.blocking.data.sub && data.modules.blocking.data.sub.keys) {
+            data.modules.blocking.data.sub.keys = data.modules.blocking.data.sub.keys.replace(/\n/ig, ',');
+        }
+
+        if (data.modules && data.modules.comments && data.modules.comments.data && data.modules.comments.data.fast && data.modules.comments.data.fast.stopworls) {
+            data.modules.comments.data.fast.stopworls = data.modules.comments.data.fast.stopworls.replace(/\n/ig, ',').replace(/,,/ig, ',').replace(/\s*,\s*/ig, ',');
+        }
+
+        if (data.modules && data.modules.comments && data.modules.comments.data && data.modules.comments.data.fast && data.modules.comments.data.fast.blacklist) {
+            data.modules.comments.data.fast.blacklist = data.modules.comments.data.fast.blacklist.replace(/\n/ig, ',').replace(/,,/ig, ',').replace(/\s*,\s*/ig, ',');
+        }
+
+        if (data.config && data.config.bots && data.config.bots) {
+            data.config.bots = data.config.bots.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.custom) {
+            data.modules.player.data.custom = data.modules.player.data.custom.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.embed && data.modules.player.data.embed.dataset) {
+            try {
+                var d_embed = JSON.parse(data.modules.player.data.embed.dataset + '');
+                data.modules.player.data.embed.dataset = Object.keys(d_embed).map(function(d) {
+                    return d + '="' + d_embed[d] + '"';
+                });
+            } catch (e) {
+                console.error(e);
+                delete data.modules.player.data.embed.dataset;
+            }
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.cinemaplayer && data.modules.player.data.cinemaplayer.information && data.modules.player.data.cinemaplayer.information.api) {
+            data.modules.player.data.cinemaplayer.information.api = data.modules.player.data.cinemaplayer.information.api.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.cinemaplayer && data.modules.player.data.cinemaplayer.information && data.modules.player.data.cinemaplayer.information.dataset) {
+            try {
+                var d_information = JSON.parse(data.modules.player.data.cinemaplayer.information.dataset);
+                data.modules.player.data.cinemaplayer.information.dataset = Object.keys(d_information).map(function(d) {
+                    return d + '="' + d_information[d] + '"';
+                });
+            } catch (e) {
+                console.error(e);
+                delete data.modules.player.data.cinemaplayer.information.dataset;
+            }
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.cinemaplayer && data.modules.player.data.cinemaplayer.online && data.modules.player.data.cinemaplayer.online.api) {
+            data.modules.player.data.cinemaplayer.online.api = data.modules.player.data.cinemaplayer.online.api.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.cinemaplayer && data.modules.player.data.cinemaplayer.online && data.modules.player.data.cinemaplayer.online.dataset) {
+            try {
+                var d_online = JSON.parse(data.modules.player.data.cinemaplayer.online.dataset);
+                data.modules.player.data.cinemaplayer.online.dataset = Object.keys(d_online).map(function(d) {
+                    return d + '="' + d_online[d] + '"';
+                });
+            } catch (e) {
+                console.error(e);
+                delete data.modules.player.data.cinemaplayer.online.dataset;
+            }
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.cinemaplayer && data.modules.player.data.cinemaplayer.trailer && data.modules.player.data.cinemaplayer.trailer.api) {
+            data.modules.player.data.cinemaplayer.trailer.api = data.modules.player.data.cinemaplayer.trailer.api.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.cinemaplayer && data.modules.player.data.cinemaplayer.trailer && data.modules.player.data.cinemaplayer.trailer.dataset) {
+            try {
+                var d_trailer = JSON.parse(data.modules.player.data.cinemaplayer.trailer.dataset);
+                data.modules.player.data.cinemaplayer.trailer.dataset = Object.keys(d_trailer).map(function(d) {
+                    return d + '="' + d_trailer[d] + '"';
+                });
+            } catch (e) {
+                console.error(e);
+                delete data.modules.player.data.cinemaplayer.trailer.dataset;
+            }
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.cinemaplayer && data.modules.player.data.cinemaplayer.download && data.modules.player.data.cinemaplayer.download.api) {
+            data.modules.player.data.cinemaplayer.download.api = data.modules.player.data.cinemaplayer.download.api.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.cinemaplayer && data.modules.player.data.cinemaplayer.download && data.modules.player.data.cinemaplayer.download.dataset) {
+            try {
+                var d_download = JSON.parse(data.modules.player.data.cinemaplayer.download.dataset);
+                data.modules.player.data.cinemaplayer.download.dataset = Object.keys(d_download).map(function(d) {
+                    return d + '="' + d_download[d] + '"';
+                });
+            } catch (e) {
+                console.error(e);
+                delete data.modules.player.data.cinemaplayer.download.dataset;
+            }
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.cinemaplayer && data.modules.player.data.cinemaplayer.picture && data.modules.player.data.cinemaplayer.picture.api) {
+            data.modules.player.data.cinemaplayer.picture.api = data.modules.player.data.cinemaplayer.picture.api.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.modules && data.modules.player && data.modules.player.data.cinemaplayer && data.modules.player.data.cinemaplayer.picture && data.modules.player.data.cinemaplayer.picture.dataset) {
+            try {
+                var d_picture = JSON.parse(data.modules.player.data.cinemaplayer.picture.dataset);
+                data.modules.player.data.cinemaplayer.picture.dataset = Object.keys(d_picture).map(function(d) {
+                    return d + '="' + d_picture[d] + '"';
+                });
+            } catch (e) {
+                console.error(e);
+                delete data.modules.player.data.cinemaplayer.picture.dataset;
+            }
+        }
+
+        if (data.config && data.config.movies && data.config.movies.cron) {
+            data.config.movies.cron = data.config.movies.cron.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.config && data.config.movies && data.config.movies.proxy) {
+            data.config.movies.proxy = data.config.movies.proxy.split(/\n/ig).filter(Boolean);
+            data.config.movies.proxy = data.config.movies.proxy.join(',').split(/,/ig).filter(function(p) {
+                var pp = p.replace(/\s*/g, '').trim();
+                return pp ? pp : false;
+            });
+        }
+
+        if (data.config && data.config.movies && data.config.movies.skip) {
+            data.config.movies.skip = data.config.movies.skip.split(/\n/ig).filter(Boolean);
+            data.config.movies.skip = data.config.movies.skip.join(',').split(/,/ig).filter(function(s) {
+                var ss = s.replace(/\s*/g, '').trim();
+                return ss ? ss : false;
+            });
+        }
+
+        if (data.modules && data.modules.content && data.modules.content.data.custom) {
+            data.modules.content.data.custom = data.modules.content.data.custom.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.modules && data.modules.episode && data.modules.episode.data.custom) {
+            data.modules.episode.data.custom = data.modules.episode.data.custom.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.modules && data.modules.episode && data.modules.episode.data.index.custom) {
+            data.modules.episode.data.index.custom = data.modules.episode.data.index.custom.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.modules && data.modules.api && data.modules.api.data.tokens) {
+            data.modules.api.data.tokens = data.modules.api.data.tokens.split(/(\n\n|\n)/ig).filter(Boolean);
+        }
+
+        if (data.comment && data.comment.comment_text) {
+            data.comment.comment_text = data.comment.comment_text.replace(/\n/ig, '\[br]');
+        }
+
+        if (data.comment && data.comment.comment_admin) {
+            data.comment.comment_admin = data.comment.comment_admin.replace(/\n/ig, '\[br]').replace(/(https?:\/\/|\/\/).*?\//ig, '/');
+        }
+
+        if (data.config && data.config.publish && data.config.publish.indexing && data.config.publish.indexing.condition) {
+            //data.config.publish.indexing.condition = data.config.publish.indexing.condition.replace(/(^\s*)|(\s*)$/g, '').replace(/\n*/ig, ' ').replace(/\s*/ig, ' ').replace(/\)\s*\(/ig, ')||(');
+        }
+
+        if (data.comment && data.comment.comment_publish) {
+            if (typeof Date.parse(data.comment.comment_publish + '') === 'number') {
+                data.comment.comment_publish = Date.parse(data.comment.comment_publish + '') + 719528 * 1000 * 60 * 60 * 24;
+            }
+        }
+
+        if (data.config && data.config.redirect && data.config.redirect.from && data.config.redirect.to) {
+            data.config.redirect.from = data.config.redirect.from.replace(/(https?:\/\/|\/\/).*?\//ig, '/').replace(/\n/ig, ',');
+            data.config.redirect.to = data.config.redirect.to.replace(/(https?:\/\/|\/\/).*?\//ig, '/').replace(/\n/ig, ',');
+            if (data.config.redirect.from.split(',').length !== data.config.redirect.to.split(',').length) {
+                delete data.config.redirect.from;
+                delete data.config.redirect.to;
+            }
+        }
+
+        if (data.config && data.config.rotate && data.config.rotate.list) {
+            data.config.rotate.list = data.config.rotate.list.replace(/\n/ig, ',').replace(/,,/ig, ',').replace(/\s*,\s*/ig, ',');
+        }
+
+        if (data.config && data.config.urls && data.config.urls.admin) {
+            data.config.urls.admin = 'admin-' + data.config.urls.admin;
+        }
+
+        if (data.config && data.config.subdomain) {
+            data.config.subdomain = data.config.subdomain.replace(/\.$/g, '') + '.';
+            if (data.config.subdomain === 'tv.' || data.config.subdomain === 'm.' || data.config.subdomain === 'app.' || data.config.subdomain === 'ftp.') {
+                alert('NOT «m.», «tv.», «app.», «ftp.»!');
+                self.innerHTML = '<span class="fa fa-save"></span>&nbsp;&nbsp;<%= __('
+                Сох ра нит ь из менения ') %>';
+                self.addEventListener('click', saveData);
+                return;
+            }
+        }
+
+        if (data.config && data.config.botdomain) {
+            data.config.botdomain = data.config.botdomain.replace(/\.$/g, '') + '.';
+            if (data.config.botdomain === 'tv.' || data.config.botdomain === 'm.' || data.config.botdomain === 'app.' || data.config.botdomain === 'ftp.') {
+                alert('NOT «m.», «tv.», «app.», «ftp.»!');
+                self.innerHTML = '<span class="fa fa-save"></span>&nbsp;&nbsp;<%= __('
+                Сох ра нит ь из менения ') %>';
+                self.addEventListener('click', saveData);
+                return;
+            }
+        }
+
+        if (data.config && data.config.alt && data.config.alt.botdomain) {
+            data.config.alt.botdomain = data.config.alt.botdomain.replace(/\.$/g, '') + '.';
+            if (data.config.alt.botdomain === 'tv.' || data.config.alt.botdomain === 'm.' || data.config.alt.botdomain === 'app.' || data.config.alt.botdomain === 'ftp.') {
+                alert('NOT «m.», «tv.», «app.», «ftp.»!');
+                self.innerHTML = '<span class="fa fa-save"></span>&nbsp;&nbsp;<%= __('
+                Сох ра нит ь из менения ') %>';
+                self.addEventListener('click', saveData);
+                return;
+            }
+        }
+
+        if (data.config && data.config.ru && data.config.ru.subdomain) {
+            data.config.ru.subdomain = data.config.ru.subdomain.replace(/\.$/g, '') + '.';
+            if (data.config.ru.subdomain === 'tv.' || data.config.ru.subdomain === 'm.' || data.config.ru.subdomain === 'app.' || data.config.ru.subdomain === 'ftp.') {
+                alert('NOT «m.», «tv.», «app.», «ftp.»!');
+                self.innerHTML = '<span class="fa fa-save"></span>&nbsp;&nbsp;<%= __('
+                Сох ра нит ь из менения ') %>';
+                self.addEventListener('click', saveData);
+                return;
+            }
+        }
+
+        if (data.config && data.config.ru && data.config.ru.botdomain) {
+            data.config.ru.botdomain = data.config.ru.botdomain.replace(/\.$/g, '') + '.';
+            if (data.config.ru.botdomain === 'tv.' || data.config.ru.botdomain === 'm.' || data.config.ru.botdomain === 'app.' || data.config.ru.botdomain === 'ftp.') {
+                alert('NOT «m.», «tv.», «app.», «ftp.»!');
+                self.innerHTML = '<span class="fa fa-save"></span>&nbsp;&nbsp;<%= __('
+                Сох ра нит ь из менения ') %>';
+                self.addEventListener('click', saveData);
+                return;
+            }
+        }
+
+        if (data.config && data.config.ru && data.config.ru.alt && data.config.ru.alt.botdomain) {
+            data.config.ru.alt.botdomain = data.config.ru.alt.botdomain.replace(/\.$/g, '') + '.';
+            if (data.config.ru.alt.botdomain === 'tv.' || data.config.ru.alt.botdomain === 'm.' || data.config.ru.alt.botdomain === 'app.' || data.config.ru.alt.botdomain === 'ftp.') {
+                alert('NOT «m.», «tv.», «app.», «ftp.»!');
+                self.innerHTML = '<span class="fa fa-save"></span>&nbsp;&nbsp;<%= __('
+                Сох ра нит ь из менения ') %>';
+                self.addEventListener('click', saveData);
+                return;
+            }
+        }
+
+        if (data.config && data.config.botdomain && !data.config.bomain) {
+            data.config.bomain = data.config.alt.bomain || data.config.ru.bomain || '<%- config.domain %>';
+        }
+
+        if (data.config && data.config.alt && data.config.alt.botdomain && data.config.bomain && data.config.alt.bomain && data.config.bomain === data.config.alt.bomain && !data.config.botdomain) {
+            data.config.bomain = '';
+        }
+
+        if (data.config && data.config.alt && data.config.alt.botdomain && !data.config.alt.bomain) {
+            data.config.alt.bomain = data.config.bomain || data.config.ru.bomain || '<%- config.domain %>';
+        }
+
+        if (data.config && data.config.alt && data.config.botdomain && data.config.bomain && data.config.alt.bomain && data.config.bomain === data.config.alt.bomain && !data.config.alt.botdomain) {
+            data.config.alt.bomain = '';
+        }
+
+        if (data.config && data.config.ru && data.config.ru.subdomain && !data.config.ru.domain) {
+            data.config.ru.domain = '<%- config.domain %>';
+        }
+
+        if (data.config && data.config.ru && data.config.ru.botdomain && !data.config.ru.bomain) {
+            data.config.ru.bomain = data.config.bomain || data.config.alt.bomain || '<%- config.domain %>';
+        }
+
+        if (data.config && data.config.ru && data.config.botdomain && data.config.bomain && data.config.ru.bomain && data.config.bomain === data.config.ru.bomain && !data.config.ru.botdomain) {
+            data.config.ru.bomain = '';
+        }
+
+        if (data.config && typeof data.config.botdomain === 'string' && data.config.alt && typeof data.config.alt.botdomain === 'string' && data.config.ru && typeof data.config.ru.botdomain === 'string' && typeof data.config.bomain === 'string' && typeof data.config.alt.bomain === 'string' && typeof data.config.ru.bomain === 'string' && typeof data.config.subdomain === 'string' && typeof data.config.ru.subdomain === 'string' && typeof data.config.ru.domain === 'string') {
+            var bot_domains = [data.config.botdomain + data.config.bomain, data.config.alt.botdomain + data.config.alt.bomain, data.config.ru.botdomain + data.config.ru.bomain].filter(Boolean);
+            var hum_domains = [data.config.subdomain + '<%- config.domain %>', data.config.ru.subdomain + data.config.ru.domain].filter(Boolean);
+
+            if (bot_domains.filter(function(d) {
+                    return hum_domains.indexOf(d) + 1;
+                }).length) {
+                alert('Domains for people and for bots should be different!');
+                self.innerHTML = '<span class="fa fa-save"></span>&nbsp;&nbsp;<%= __('
+                Сох ра нит ь из менения ') %>';
+                self.addEventListener('click', saveData);
+                return;
+            }
+        }
+
+        if (data.config && data.config.geolite2 && data.config.geolite2.ips) {
+            if (typeof data.config.geolite2.ips === 'object') {
+                data.config.geolite2.ips = data.config.geolite2.ips.map(function(ip) {
+                    return ip.replace(/"/ig, '').replace(/'/ig, '');
+                });
+            } else {
+                data.config.geolite2.ips = data.config.geolite2.ips.replace(/"/ig, '').replace(/'/ig, '');
+            }
+        }
+
+        if (data.config && data.config.default && data.config.default.tags && !data.config.default.tags.list) {
+            data.config.default.tags.list = '';
+        }
+
+        if (data.config && data.config.domain) {
+            delete data.config.domain;
+        }
+
+        sendServer(data, function(err, result) {
+            setTimeout(function() {
+                if (!err && typeof movies_saved_data !== 'undefined' && movies_saved_data) {
+                    self.innerHTML = '<span class="fa fa-check"></span>';
+                    return;
+                }
+                if (data.config &&
+                    data.config.urls &&
+                    data.config.urls.admin &&
+                    data.config.urls.admin !== '<%- config.urls.admin %>') {
+                    window.location.href = '/' + data.config.urls.admin;
+                } else if (data.config &&
+                    data.config.subdomain &&
+                    data.config.subdomain !== '<%- config.subdomain %>') {
+                    window.location.href = '<%- config.protocol %>' + data.config.subdomain + '<%- config.domain + ' / ' + config.urls.admin %>';
+                } else if (data.content && !data.content.id) {
+                    window.location.href = '<%- ' / ' + config.urls.admin + ' / content ' %>';
+                } else if (data.movie && !data.movie.id) {
+                    window.location.href = '<%- ' / ' + config.urls.admin + ' / movies ' %>';
+                } else if (data.config && data.config.theme && data.config.theme !== '<%- config.theme %>') {
+                    self.innerHTML = '<span class="fa fa-save"></span>&nbsp;&nbsp;<%= __('
+                    Сох ра нит ь из менения ') %>';
+                    self.addEventListener('click', saveData);
+                } else if (
+                    (
+                        data.modules &&
+                        data.modules.mobile &&
+                        data.modules.mobile.data &&
+                        data.modules.mobile.data.subdomain &&
+                        parseInt(data.modules.mobile.data.subdomain + '') !== parseInt('<%- modules.mobile.data.subdomain %>')
+                    ) || (
+                        data.modules &&
+                        data.modules.tv &&
+                        data.modules.tv.data &&
+                        data.modules.tv.data.subdomain &&
+                        parseInt(data.modules.tv.data.subdomain + '') !== parseInt('<%- modules.tv.data.subdomain %>')
+                    )
+                ) {
+                    self.innerHTML = '<span class="fa fa-save"></span>&nbsp;&nbsp;<%= __('
+                    Сох ра нит ь из менения ') %>';
+                    self.addEventListener('click', saveData);
+                } else if (err) {
+                    self.innerHTML = '<span class="fa fa-bug"></span>&nbsp;&nbsp;' + err;
+                } else {
+                    self.innerHTML = '<span class="fa fa-save"></span>&nbsp;&nbsp;<%= __('
+                    Сох ра нит ь из менения ') %>';
+                    self.addEventListener('click', saveData);
+                }
+            }, 3000);
+        });
+
+    }
+
+    function sendServer(data, long, callback) {
+
+        if (arguments.length === 2) {
+            callback = long;
+            long = false;
+        }
+
+        setTimeout(minTimeout, 1000);
+
+        function minTimeout() {
+
+            var status = '';
+            var result = '';
+            var state = '';
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/<%- config.urls.admin %>/change', true);
+            xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+            xhr.onreadystatechange = function() {
+                status = xhr.status;
+                result = xhr.responseText;
+                state = xhr.readyState;
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    return callback(null, xhr.responseText);
+                }
+            };
+            xhr.send(JSON.stringify(data));
+
+            if (!long) {
+                setTimeout(function() {
+                    if (state === 4 && status !== 200) {
+                        console.log('Site error:', status, result);
+                        return callback('<%= __('
+                            Ош иб ка веб - са й т а ') %>');
+                    } else if (state !== 4) {
+                        console.log('Server error:', status, result);
+                        return callback('<%= __('
+                            Ош иб ка сервера ') %>');
+                    }
+                }, 25000);
+            }
+
+        }
+
+    }
+
+    function alertCP() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://cinemapress.github.io/CinemaPress/files/alert.json', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var alerts = JSON.parse(xhr.responseText);
+                if (alerts && alerts.length) {
+                    alerts.forEach(function(alert) {
+                        if (typeof alert.domains === 'undefined' || alert.domains.indexOf('<%- config.domain %>') + 1) {
+                            var selector = document.querySelector(alert.selector);
+                            if (!selector) return;
+                            selector.innerHTML = alert.html;
+                        }
+                    });
+                }
+            }
+        };
+        xhr.send(null);
+    }
+
+    function inputData() {
+
+        var i = 0;
+
+        var counts = document.querySelectorAll('.keywords,.titles,.descriptions');
+        if (counts && counts.length) {
+            for (i = 0; i < counts.length; i++) {
+                var n = document.getElementById(counts[i].name);
+                if (n)
+                    n.textContent = ((counts[i].value.replace(/(\s+|<.*?>)/g, '')).length).toString();
+                counts[i].oninput = function() {
+                    document.getElementById(this.name).textContent = ((this.value.replace(/(\s+|<.*?>)/g, '')).length).toString();
+                };
+            }
+        }
+
+        var codes = document.querySelectorAll('.codes');
+        if (codes && codes.length) {
+            for (i = 0; i < codes.length; i++) {
+                codes[i].addEventListener('click', function() {
+                    var data_name = this.getAttribute('data-name');
+                    var data_code = this.getAttribute('data-code');
+                    var caret_pos = 0;
+                    var textarea = document.getElementsByName(data_name)[0];
+                    if (document.selection) {
+                        textarea.focus();
+                        var sel = document.selection.createRange();
+                        sel.moveStart('character', -textarea.value.length);
+                        caret_pos = sel.text.length;
+                    } else if (textarea.selectionStart || parseInt(textarea.selectionStart) === 0) {
+                        caret_pos = textarea.selectionStart;
+                    }
+                    textarea.value = textarea.value.slice(0, caret_pos) + data_code + textarea.value.slice(caret_pos);
+                    textarea.focus();
+                });
+            }
+        }
+
+        var input_number = document.querySelectorAll('.input_number');
+        if (input_number && input_number.length) {
+            for (i = 0; i < input_number.length; i++) {
+                input_number[i].oninput = function() {
+                    var value = this.value;
+                    var rep = /[^0-9\-]/g;
+                    if (rep.test(value)) {
+                        value = value.replace(rep, '');
+                        this.value = value;
+                    }
+                };
+            }
+        }
+
+        var input_url = document.querySelectorAll('.input_url');
+        if (input_url && input_url.length) {
+            for (i = 0; i < input_url.length; i++) {
+                input_url[i].oninput = function() {
+                    var value = this.value;
+                    var rep = /[^0-9A-Za-z_.\-]/g;
+                    if (rep.test(value)) {
+                        value = value.replace(rep, '');
+                        this.value = value;
+                    }
+                };
+            }
+        }
+
+        var input_ids = document.querySelectorAll('.input_ids');
+        if (input_ids && input_ids.length) {
+            for (i = 0; i < input_ids.length; i++) {
+                input_ids[i].oninput = function() {
+                    var value = this.value;
+                    var rep = /[^0-9,]/g;
+                    if (rep.test(value)) {
+                        value = value.replace(rep, '');
+                        this.value = value;
+                    }
+                };
+            }
+        }
+
+    }
+
+    function uploadFile() {
+        var forms = document.querySelectorAll('[data-form]');
+        if (!forms) return;
+        forms.forEach(function(form) {
+            if (!form) return;
+            var sel_file = '#' + form.dataset.form + 'File';
+            var file = document.querySelector(sel_file);
+            if (form && file) {
+                checkChange(form, file);
+            }
+        });
+    }
+
+    function checkChange(form, file) {
+        file.addEventListener('change', function() {
+            var is = '[data-' + form.dataset.form + '="input"]';
+            var input = document.querySelector(is);
+            var value = (input) ? input.value : '';
+            var ss = '[data-' + form.dataset.form + '="src"]';
+            var src = document.querySelector(ss);
+            var ls = 'label[for="' + file.id + '"]';
+            var label = document.querySelector(ls);
+            if (label) label.innerHTML = '<span class="fa fa-spinner fa-spin"></span>';
+            var formData = new FormData(form);
+            var req = new XMLHttpRequest();
+            req.open('POST', '/<%- config.urls.admin %>/upload/' + (file.dataset.renamed || ''), true);
+            req.onload = function() {
+                if (req.readyState === 4 && req.status === 200) {
+                    var uploadMessage = JSON.parse(req.responseText);
+                    if (uploadMessage.error) return console.log(uploadMessage.error);
+                    input.value = (value.indexOf('/') + 1 && file.dataset.multi) ? [uploadMessage.file, value].join(',') :
+                        uploadMessage.file;
+                    if (src) src.setAttribute('src', uploadMessage.file + '?' + (new Date()).getTime());
+                    if (label) label.innerHTML = '<span class="fa fa-plus"></span>';
+                }
+            };
+            req.upload.onprogress = function(evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = parseInt((evt.loaded / evt.total) * 100);
+                    if (input) {
+                        input.style.width = percentComplete + '%';
+                        input.value = percentComplete + '%';
+                    }
+                }
+            };
+            req.send(formData);
+        });
+    }
+
+    function translit() {
+        var content_title = document.querySelector('input[name="content.content_title"]');
+        if (!content_title) return;
+        content_title.addEventListener('input', t);
+
+        function t() {
+            var str = content_title.value;
+            var link = slugify(str);
+            link = link
+                .replace(/-+/g, '-')
+                .replace(/(^-*)|(-*)$/g, '');
+            var content_url = document.querySelector('input[name="content.content_url"]');
+            if (!content_url) return;
+            if (content_url.disabled) return;
+            document.querySelector('input[name="content.content_url"]').value = link;
+            document.querySelector('[data-renamed]').dataset.renamed = link;
+            document.querySelector('#rss_content_url').setAttribute('href', '<%- config.protocol %><%- config.subdomain %><%- config.domain %>/rss.xml?collection=' + link);
+        }
+    }
+
+    (function() {
+        var allForms = document.querySelectorAll('input,textarea');
+        if (!allForms) return;
+        allForms.forEach(function(af) {
+            if (!af) return;
+            af.setAttribute('autocomplete', 'off');
+            af.setAttribute('autocapitalize', 'off');
+            af.setAttribute('spellcheck', 'false');
+        });
+    })();
+
+    function changeApi(custom_name) {
+        document.querySelectorAll('[data-delete-api="' + custom_name + '"]').forEach(function(dp) {
+            dp.addEventListener('click', function() {
+                var custom = document.querySelector('[name="' + custom_name + '"]');
+                custom.value = decodeURIComponent(encodeURIComponent(custom.value)
+                        .replace('%23%20' + this.dataset.parser.replace(/^%23(%20)*/, ''), '')
+                        .replace(this.dataset.parser.replace(/^%23(%20)*/, ''), ''))
+                    .replace(/\n\n+/g, '\n\n')
+                    .replace(/(^\s*)|(\s*)$/g, '');
+                this.parentElement.parentElement.parentElement.innerHTML = '';
+            });
+        });
+        document.querySelectorAll('[data-activate-api="' + custom_name + '"]').forEach(function(ap) {
+            ap.addEventListener('click', function() {
+                var active = this.dataset.parser.substring(0, 3) !== '%23';
+                var custom = document.querySelector('[name="' + custom_name + '"]');
+                custom.value = decodeURIComponent(encodeURIComponent(custom.value)
+                        .replace(this.dataset.parser, active ?
+                            '%23%20' + this.dataset.parser :
+                            this.dataset.parser.replace(/^%23(%20)*/, '')
+                        )
+                    )
+                    .replace(/\n\n+/g, '\n\n')
+                    .replace(/(^\s*)|(\s*)$/g, '');
+                this.dataset.parser = active ?
+                    '%23%20' + this.dataset.parser :
+                    this.dataset.parser.replace(/^%23(%20)*/, '');
+                this.parentElement.parentElement.parentElement
+                    .setAttribute('class', active ? 'no-active' : '');
+                this.setAttribute('class', this.getAttribute('class')
+                    .replace(active ?
+                        'text-success' :
+                        'text-muted',
+                        active ?
+                        'text-muted' :
+                        'text-success'
+                    )
+                );
+            });
+        });
+    }
+
+    var name_movie_description = document.querySelector('[name="movie.description"]');
+    if (name_movie_description && name_movie_description.addEventListener) {
+        name_movie_description.addEventListener('input', function() {
+            var name_movie_custom = document.querySelector('[name="movie.custom"]');
+            name_movie_custom.value = name_movie_custom.value.replace('"unique": false', '"unique": true');
+        }, false);
+    }
+
+    ['config.movies.cron', 'config.bots', 'modules.content.data.custom', 'modules.player.data.custom', 'modules.episode.data.custom', 'modules.episode.data.index.custom', 'modules.content.data.scraper', 'modules.api.data.tokens', "modules.player.data.cinemaplayer.picture.api", "modules.player.data.cinemaplayer.trailer.api", "modules.player.data.cinemaplayer.online.api", "modules.player.data.cinemaplayer.download.api", "modules.player.data.cinemaplayer.information.api"].forEach(function(ca) {
+        if (document.querySelector('[data-activate-api="' + ca + '"]') && document.querySelector('[data-delete-api="' + ca + '"]')) {
+            changeApi(ca);
+        }
+    });
+</script>
+
+<script src="/themes/default/public/admin/js/particles.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function getCookie(name) {
+            var matches = document.cookie.match(new RegExp(
+                '(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/+^])/g, '\\$1') + '=([^;]*)'
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+        function setCookie(name, value, options) {
+            options = options || {};
+            var expires = options.expires;
+            if (typeof expires === 'number' && expires) {
+                var d = new Date();
+                d.setTime(d.getTime() + expires * 1000);
+                expires = options.expires = d;
+            }
+            if (expires && expires.toUTCString) {
+                options.expires = expires.toUTCString();
+            }
+            value = encodeURIComponent(value);
+            var updatedCookie = name + '=' + value;
+            for (var propName in options) {
+                updatedCookie += '; ' + propName;
+                var propValue = options[propName];
+                if (propValue !== true) {
+                    updatedCookie += '=' + propValue;
+                }
+            }
+            document.cookie = updatedCookie;
+        }
+
+        function deleteCookie(name) {
+            setCookie(name, '', {
+                expires: -1
+            });
+        }
+
+        (function strangerThings() {
+            var st = document.querySelector('#stranger-things');
+            if (!st) return;
+            if (!getCookie('stranger')) {
+                strangerThingsOn();
+                st.style.display = 'inline-block';
+                st.innerHTML = '<i class="fas fa-circle"></i>';
+            } else {
+                st.style.display = 'inline-block';
+                st.innerHTML = '<i class="far fa-circle"></i>';
+            }
+            st.addEventListener('click', function() {
+                if (st.innerHTML === '<i class="fas fa-circle"></i>') {
+                    strangerThingsOff();
+                    st.innerHTML = '<i class="far fa-circle"></i>';
+                    setCookie('stranger', 'off', {
+                        expires: 3600 * 24 * 265
+                    });
+                } else {
+                    strangerThingsOn();
+                    st.innerHTML = '<i class="fas fa-circle"></i>';
+                    deleteCookie('stranger');
+                }
+            });
+        })();
+
+        function strangerThingsOn() {
+            var particles = document.querySelector('#particles-top');
+            if (particles) particlesJS('particles-top', {
+                'particles': {
+                    'number': {
+                        'value': 60,
+                        'density': {
+                            'enable': true,
+                            'value_area': 800
+                        }
+                    },
+                    'color': {
+                        'value': '#ffffff'
+                    },
+                    'shape': {
+                        'type': 'circle',
+                        'stroke': {
+                            'width': 0,
+                            'color': '#000000'
+                        },
+                        'polygon': {
+                            'nb_sides': 5
+                        },
+                        'image': {
+                            'src': 'img/github.svg',
+                            'width': 100,
+                            'height': 100
+                        }
+                    },
+                    'opacity': {
+                        'value': 1,
+                        'random': true,
+                        'anim': {
+                            'enable': true,
+                            'speed': 1,
+                            'opacity_min': 0,
+                            'sync': false
+                        }
+                    },
+                    'size': {
+                        'value': 3,
+                        'random': true,
+                        'anim': {
+                            'enable': false,
+                            'speed': 4,
+                            'size_min': 0.3,
+                            'sync': false
+                        }
+                    },
+                    'line_linked': {
+                        'enable': false,
+                        'distance': 150,
+                        'color': '#ffffff',
+                        'opacity': 0.4,
+                        'width': 1
+                    },
+                    'move': {
+                        'enable': true,
+                        'speed': 1,
+                        'direction': 'none',
+                        'random': true,
+                        'straight': false,
+                        'out_mode': 'out',
+                        'bounce': false,
+                        'attract': {
+                            'enable': false,
+                            'rotateX': 600,
+                            'rotateY': 600
+                        }
+                    }
+                },
+                'interactivity': {
+                    'detect_on': 'canvas',
+                    'events': {
+                        'onhover': {
+                            'enable': false,
+                            'mode': 'bubble'
+                        },
+                        'onclick': {
+                            'enable': false,
+                            'mode': 'repulse'
+                        },
+                        'resize': true
+                    },
+                    'modes': {
+                        'grab': {
+                            'distance': 400,
+                            'line_linked': {
+                                'enable': false,
+                                'opacity': 1
+                            }
+                        },
+                        'bubble': {
+                            'distance': 250,
+                            'size': 0,
+                            'duration': 2,
+                            'opacity': 0,
+                            'speed': 3
+                        },
+                        'repulse': {
+                            'distance': 400,
+                            'duration': 0.4
+                        },
+                        'push': {
+                            'particles_nb': 4
+                        },
+                        'remove': {
+                            'particles_nb': 2
+                        }
+                    }
+                },
+                'retina_detect': true
+            });
+        }
+
+        function strangerThingsOff() {
+            var particles = document.querySelector('#particles-top');
+            if (particles) particles.innerHTML = '';
+        }
+    });
+</script>

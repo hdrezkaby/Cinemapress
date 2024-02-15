@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="ie ie6 lte9 lte8 lte7 no-js"> <![endif]-->
+<!--[if IE 7]>
+<html class="ie ie7 lte9 lte8 lte7 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8 lte9 lte8 no-js">      <![endif]-->
+<!--[if IE 9]>
+<html class="ie ie9 lte9 no-js">           <![endif]-->
+<!--[if gt IE 9]>
+<html class="no-js">                       <![endif]-->
+<!--[if !IE]><!-->
+<html class="no-js">                   <!--<![endif]-->
+<head>
+
+    <%- include('./includes/head.ejs'); -%>
+
+</head>
+<body>
+<div id="container" class="clearfix">
+
+    <%- include('./includes/left.ejs'); -%>
+
+    <%- include('./includes/right.ejs'); -%>
+
+    <div id="main" class="clearfix">
+
+        <%- include('./includes/header-main.ejs'); -%>
+
+        <div id="content" class="clearfix">
+
+            <%- include('includes/header-sec.ejs'); -%>
+
+            <div class="window">
+                <div class="actionbar">
+                    <div class="pull-left">
+                        <a href="javascript:void(0)" class="btn" data-toggle-sidebar="left">
+                            <i class="fa fa-chevron-left"></i>
+                        </a>
+                        <a href="/<%- config.urls.admin %>/publish" class="btn">
+                            <%= __('Фукнция публикации') %>
+                        </a>
+                        <a href="https://cinemapress.su/ru/admin/publish.html" class="btn"
+                           title="<%= __('Информация о параметрах публикации фильмов') %>" target="_blank">
+                            <i class="fa fa-info-circle text-muted"></i>
+                        </a>
+                    </div>
+                    <div class="pull-right">
+                        <a href="javascript:void(0)" class="btn" data-toggle-sidebar="right">
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="inner-padding">
+
+                    <% if (typeof line === 'object') { %>
+
+                        <div class="progress-project-header">
+                            <h5><%= __('Опубликовано фильмов') %></h5><span><%- line.percent.top %>%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="<%- line.percent.pub %>"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: <%- line.percent.pub %>%; background: linear-gradient(-45deg,#ffa534,#35cd3a);"
+                                 title="<%= __('Опубликовано:') %> <%- line.counts.pub %>">
+                                <span class="sr-only"><%- line.percent.pub %>%</span>
+                            </div>
+                            <div class="progress-bar progress-bar-warning"
+                                 style="width: <%- (line.percent.fil - line.percent.pub) %>%; background: linear-gradient(-45deg,#f3545d,#ffa534);opacity: .4;"
+                                 title="<%= __('Осталось:') %> <%- (line.counts.fil - line.counts.pub) %>">
+                                <span class="sr-only"><%- line.percent.fil %>%</span>
+                            </div>
+                            <div class="progress-bar progress-bar-warning"
+                                 style="width: <%- (line.percent.all - line.percent.fil) %>%; background-color: #1a2035"
+                                 title="<%= __('Отфильтрованы:') %> <%- (line.counts.all - line.counts.fil) %>">
+                                <span class="sr-only"><%- line.percent.all %>%</span>
+                            </div>
+                        </div>
+                        <% if (config.language && config.language === 'ru') { %>
+                            <div class="progress-project-footer">
+                                <% if (line.days) { %>
+                                    <p><%= __('Автопубликация на %s дней', line.days) %></p>
+                                <% } %>
+                                <% if (line.counts.pub !== line.counts.all) { %>
+                                    <span><strong><%- line.counts.pub %></strong>&nbsp;/&nbsp;<%- line.counts.fil %>&nbsp;/&nbsp;<%- line.counts.all %></span>
+                                <% } else { %>
+                                    <span><strong><%- line.counts.pub %></strong></span>
+                                <% } %>
+                            </div>
+                        <% } else { %>
+                            <div class="progress-project-footer">
+                                <span><strong><%- line.counts.pub %></strong></span>
+                            </div>
+                        <% } %>
+
+                    <% } %>
+
+                    <div class="spacer-10"></div>
+
+                    <div class="row">
+
+                        <% if (config.language && config.language === 'ru') { %>
+
+                        <div class="col-sm-12">
+                            <div class="cinema-box">
+                                <div class="cinema-box-header">
+                                    <div class="cinema-label"><i
+                                                class="fa fa-clock"></i>&nbsp;&nbsp;&nbsp;<%= __('Настройка автопубликации') %>
+                                    </div>
+                                    <div class="cinema-label hidden-xs" style="float: right">
+                                        <a href="https://cinemapress.su/ru/admin/publish.html"
+                                           class="csstip" data-title="<%= __('Нстройка публикации фильмов каждый час') %>"
+                                           target="_blank">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="inner-padding">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="spacer-10"></div>
+                                                    <div id="movies_slider" class="noUiSlider"
+                                                         style="width: 100%;"></div>
+                                                    <div class="spacer-20"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="spacer-10"></div>
+                                                    <div id="hours_slider" class="noUiSlider"
+                                                         style="width: 100%;"></div>
+                                                    <div class="spacer-20"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3 text-center" style="padding: 5px 0; font-size: 11px;">
+                                            <%= __('Публиковать по') %>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="text" id="movies" name="config.publish.every.movies"
+                                                   class="to form-control input_number" style="width: 100%;">
+                                        </div>
+                                        <div class="col-xs-3 text-center" style="padding: 5px 0;  font-size: 11px;">
+                                            <%= __('фильма(ов) каждые') %>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="text" id="hours" name="config.publish.every.hours"
+                                                   class="to form-control input_number" style="width: 100%;">
+                                        </div>
+                                        <div class="col-xs-2 text-center" style="padding: 5px 0;  font-size: 11px;">
+                                            <%= __('часа(ов)') %>
+                                        </div>
+                                    </div>
+
+                                    <% if (typeof soon_id === 'object' && soon_id.length) { %>
+
+                                        <div class="spacer-10"></div>
+
+                                        <div class="faq">
+                                            <article class="faq-group">
+                                                <header class="text-muted">
+                                                    <i class="fa fa-minus"></i>
+                                                    <h3><%= __('Будут опубликованы в') %> <span id="time">00:00</span>
+                                                    </h3>
+                                                    <script>
+                                                      document.addEventListener('DOMContentLoaded', function() {
+                                                        var today = new Date();
+                                                        today.setHours(today.getHours() + 1);
+                                                        var h = today.getHours();
+                                                        for (; h <= 24; h++) {
+                                                          if (!(h % parseInt(document.getElementById('hours').value))) {
+                                                            document.getElementById('time').innerHTML = ('0' + h).slice(-2) + ':00';
+                                                            break;
+                                                          }
+                                                        }
+                                                      });
+                                                    </script>
+                                                </header>
+                                                <div class="faq-content clearfix">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="thumbs-list thumbs-small">
+                                                                <ul>
+                                                                    <% soon_id.forEach(function (id) { %>
+                                                                        <a href="/<%- config.urls.admin %>/movies?id=<%- id %>" target="_blank">
+                                                                            <li style="background: none !important; display: none">
+                                                                                <img class="media-object" data-src="/<%- config.urls.admin %>/poster?id=<%- id %>" alt="ID: <%- id %>" title="ID: <%- id %>">
+                                                                            </li>
+                                                                        </a>
+                                                                    <% }); %>
+                                                                </ul>
+                                                                <script>
+                                                                  var movies = document.querySelectorAll('.thumbs-list li');
+                                                                  movies.forEach(function(m, i) {
+                                                                    setTimeout(function() {
+                                                                      m.querySelector('img').src = m.querySelector('img').dataset.src;
+                                                                      setTimeout(function() {m.style.display = 'inline-block';}, i * 100);
+                                                                    }, i * 300);
+                                                                  });
+                                                                </script>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </article>
+                                        </div>
+
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="spacer-10"></div>
+
+                        <div class="col-sm-12">
+                            <div class="cinema-box">
+                                <div class="cinema-box-header">
+                                    <div class="cinema-label"><i
+                                                class="fa fa-sliders-h"></i>&nbsp;&nbsp;&nbsp;<%= __('Диапазон идентификаторов фильмов') %>
+                                    </div>
+                                    <div class="cinema-label hidden-xs" style="float: right">
+                                        <a href="https://cinemapress.su/ru/admin/publish.html" class="csstip"
+                                           data-title="<%= __('Диапазон идентификаторов фильмов, которые уже опубликованы на веб-сайте') %>"
+                                           target="_blank">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="inner-padding">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="spacer-10"></div>
+                                            <div id="diapason" class="noUiSlider" style="width: 100%;"></div>
+                                            <div class="spacer-20"></div>
+                                        </div>
+                                        <div class="col-xs-3 col-xs-offset-1">
+                                            <input type="text" id="start" name="config.publish.start"
+                                                   class="to form-control input_number" style="width: 100%;">
+                                        </div>
+                                        <div class="col-xs-4 text-center" style="padding: 5px 0;">
+                                            - <%= __('до') %> -
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <input type="text" id="stop" name="config.publish.stop"
+                                                   class="to form-control input_number" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="spacer-10"></div>
+
+                        <% } %>
+
+                        <div class="col-sm-12">
+                            <div class="cinema-box">
+                                <div class="cinema-box-header">
+                                    <div class="cinema-label"><i
+                                                class="fa fa-id-card"></i>&nbsp;&nbsp;&nbsp;<%= __('Обязательная информация у фильмов') %>
+                                    </div>
+                                    <div class="cinema-label hidden-xs" style="float: right">
+                                        <a href="https://cinemapress.su/ru/admin/publish.html" class="csstip"
+                                           data-title="<%= __('На веб-сайте будут публиковаться только фильмы, у которых имеется отмеченная информация (постер, название, стандартное описание)') %>"
+                                           target="_blank">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="inner-padding">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-xs-12">
+                                            <div class="stacked-labels">
+                                                <label>
+                                                    <input name="config.publish.required" value="" type="checkbox"
+                                                    <% if (!config.publish.required.length) { %> checked=""
+                                                            <% } %>
+                                                           onclick="if (this.checked === true) {document.querySelector('input[value=poster]').checked = false;document.querySelector('input[value=description]').checked = false; if (document.querySelector('input[value=title_ru]')) {document.querySelector('input[value=title_ru]').checked = false;}}">
+                                                    <span></span>
+                                                    <%= __('Не важно (публикация любых фильмов)') %>
+                                                </label>
+                                                <label>
+                                                    <input name="config.publish.required" value="poster" type="checkbox"
+                                                    <% if (config.publish.required.indexOf('poster') + 1) { %>checked=""
+                                                            <% } %>
+                                                           onclick="if (this.checked === true) {document.querySelector('input[name=\'config.publish.required\']').checked = false}">
+                                                    <span></span>
+                                                    <%= __('Только имеющие постер') %>
+                                                </label>
+                                                <% if (config.language === 'ru') { %>
+                                                    <label>
+                                                        <input name="config.publish.required" value="title_ru"
+                                                               type="checkbox"
+                                                        <% if (config.publish.required.indexOf('title_ru') + 1) { %>
+                                                               checked=""
+                                                                <% } %>
+                                                               onclick="if (this.checked === true) {document.querySelector('input[name=\'config.publish.required\']').checked = false}">
+                                                        <span></span>
+                                                        <%= __('Только имеющие переведенное название') %>
+                                                    </label>
+                                                <% } %>
+                                                <label>
+                                                    <input name="config.publish.required" value="description"
+                                                           type="checkbox"
+                                                    <% if (config.publish.required.indexOf('description') + 1) { %>
+                                                           checked=""
+                                                            <% } %>
+                                                           onclick="if (this.checked === true) {document.querySelector('input[name=\'config.publish.required\']').checked = false}">
+                                                    <span></span>
+                                                    <%= __('Только имеющие стандартное описание') %>
+                                                </label>
+                                                <label>
+                                                    <input name="config.publish.required" value="player" type="checkbox"
+                                                    <% if (config.publish.required.indexOf('player') + 1) { %>checked=""
+                                                            <% } %>
+                                                           onclick="if (this.checked === true) {document.querySelector('input[name=\'config.publish.required\']').checked = false}">
+                                                    <span></span>
+                                                    <%= __('Только имеющие embed/iframe') %>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="spacer-10"></div>
+
+                        <div class="col-sm-12">
+                            <div class="faq">
+                                <article class="faq-group">
+                                    <header class="text-muted text-left">
+                                        <i class="fa fa-plus"></i>
+                                        <h3><%= __('Фильтрация фильмов') %></h3>
+                                    </header>
+                                    <div class="faq-content clearfix">
+                                        <div class="cinema-box">
+                                            <div class="cinema-box-header">
+                                                <div class="cinema-label"><i class="fa fa-eye-slash"></i>&nbsp;&nbsp;&nbsp;<%= __('Тематический веб-сайт') %>
+                                                </div>
+                                                <div class="cinema-label hidden-xs" style="float: right">
+                                                    <a href="https://cinemapress.su/ru/admin/publish.html" class="csstip"
+                                                       data-title="<%= __('Вы можете создать тематический веб-сайт, на котором будут опубликованы только «Аниме», «Российские фильмы», и т.п.') %>"
+                                                       target="_blank">
+                                                        <i class="fa fa-info-circle"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="inner-padding">
+                                                <div class="row">
+
+                                                    <div class="col-sm-3">
+                                                        <label><%= __('Тип:') %></label>
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <select name="config.publish.thematic.type" class="form-control">
+                                                            <option value="0"
+                                                                    <% if (config.publish.thematic.type === '0') { %>selected="selected"
+                                                                    <% } %>
+                                                            >
+                                                                <%= __('Фильмы') %>
+                                                            </option>
+                                                            <option value="1"
+                                                                    <% if (config.publish.thematic.type === '1') { %>selected="selected"
+                                                                    <% } %>
+                                                            >
+                                                                <%= __('Сериалы') %>
+                                                            </option>
+                                                            <option value=""
+                                                                    <% if (config.publish.thematic.type === '') { %>selected="selected"
+                                                                    <% } %>
+                                                            >
+                                                                <%= __('Все') %>
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="spacer-10"></div>
+
+                                                <div class="row">
+
+                                                    <div class="col-sm-4">
+                                                        <label><%= __('Число голосов KinoPoisk:') %></label>
+                                                    </div>
+                                                    <div class="col-sm-8">
+                                                        <select name="config.publish.thematic.kp_vote" class="form-control">
+                                                            <% var plusKp = 10; var k; for (k = 0; k <= 10000; k = k + plusKp) { %>
+                                                                <% if (k === 100) {
+                                                                    plusKp = 100;
+                                                                } %>
+                                                                <% if (config.publish.thematic.kp_vote === k) { %>
+                                                                    <option value="<%= k %>" selected="selected">
+                                                                        > <%- k %> <%= __('голос(ов)') %>
+                                                                    </option>
+                                                                <% } else { %>
+                                                                    <option value="<%= k %>">
+                                                                        > <%- k %> <%= __('голос(ов)') %>
+                                                                    </option>
+                                                                <% } %>
+                                                            <% } %>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="spacer-10"></div>
+
+                                                <div class="row">
+
+                                                    <div class="col-sm-4">
+                                                        <label><%= __('Число голосов IMDb:') %></label>
+                                                    </div>
+                                                    <div class="col-sm-8">
+                                                        <select name="config.publish.thematic.imdb_vote" class="form-control">
+                                                            <% var plusImdb = 10; var i; for (i = 0; i <= 10000; i = i + plusImdb) { %>
+                                                                <% if (i === 100) {
+                                                                    plusImdb = 100;
+                                                                } %>
+                                                                <% if (config.publish.thematic.imdb_vote === i) { %>
+                                                                    <option value="<%= i %>" selected="selected">
+                                                                        > <%- i %> <%= __('голос(ов)') %>
+                                                                    </option>
+                                                                <% } else { %>
+                                                                    <option value="<%= i %>">
+                                                                        > <%- i %> <%= __('голос(ов)') %>
+                                                                    </option>
+                                                                <% } %>
+                                                            <% } %>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="spacer-10"></div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <label><%= __('Годы:') %></label>
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="config.publish.thematic.year"
+                                                               value="<%= config.publish.thematic.year %>" class="form-control"
+                                                               placeholder="&#34;2018&#34; | &#34;2019&#34; | &#34;2020&#34;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="spacer-10"></div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <label><%= __('Жанры:') %></label>
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="config.publish.thematic.genre"
+                                                               value="<%= config.publish.thematic.genre %>" class="form-control"
+                                                               placeholder="!&#34;<%= __('для взрослых') %>&#34;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="spacer-10"></div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <label><%= __('Страны:') %></label>
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="config.publish.thematic.country"
+                                                               value="<%= config.publish.thematic.country %>" class="form-control"
+                                                               placeholder="&#34;<%= __('США') %>&#34; !&#34;<%= __('Китай') %>&#34;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="spacer-10"></div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <label><%= __('Актеры:') %></label>
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="config.publish.thematic.actor"
+                                                               value="<%= config.publish.thematic.actor %>" class="form-control"
+                                                               placeholder="!&#34;<%= __('Александр Невский') %>&#34;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="spacer-10"></div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <label><%= __('Режиссеры:') %></label>
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="config.publish.thematic.director"
+                                                               value="<%= config.publish.thematic.director %>" class="form-control"
+                                                               placeholder="!&#34;<%= __('Сарик Андреасян') %>&#34;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="spacer-10"></div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <label><%= __('Фильмы:') %></label>
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="config.publish.thematic.query_id"
+                                                               value="<%= config.publish.thematic.query_id %>" class="form-control"
+                                                               placeholder="!&#34;298&#34; !&#34;299&#34; !&#34;300&#34;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="spacer-10"></div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <label><%= __('Стоп-слова:') %></label>
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="config.publish.thematic.search"
+                                                               value="<%= config.publish.thematic.search %>" class="form-control"
+                                                               placeholder="!&#34;erotic&#34; !&#34;porn&#34;">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <script>
+              $('#movies_slider').noUiSlider({
+                range: [0, 1e3],
+                start: [<%= config.publish.every.movies %>],
+                handles: 1,
+                step: 1,
+                connect: 'lower',
+                serialization: { resolution: 1, to: [$('#movies')] }
+              }), $('#hours_slider').noUiSlider({
+                range: [0, 12],
+                start: [<%= config.publish.every.hours %>],
+                handles: 1,
+                step: 1,
+                connect: 'lower',
+                serialization: { resolution: 1, to: [$('#hours')] }
+              }), $('#diapason').noUiSlider({
+                range: [298, 10000000],
+                start: [<%= config.publish.start %>,<%= config.publish.stop %>],
+                handles: 2,
+                step: 1,
+                connect: 'lower',
+                serialization: { to: [$('#start'), $('#stop')], resolution: 1 }
+              });
+            </script>
+
+            <%- include('./includes/footer.ejs'); -%>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
