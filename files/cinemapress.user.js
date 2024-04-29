@@ -131,7 +131,7 @@ function parseData() {
     ) {
         urls.push(
             'https://api.apicollaps.cc/franchise/details?' +
-            'token=eedefb541aeba871dcfc756e6b31c02e&' +
+            'token=4c250f7ac0a8c8a658c789186b9a58a5&' +
             'kinopoisk_id=' +
             kp_id
         );
