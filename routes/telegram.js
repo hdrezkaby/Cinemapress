@@ -9,20 +9,6 @@ process.env['NTBA_FIX_319'] = 1;
 var config = require('../config/production/config');
 Object.keys(config).length === 0 &&
   (config = require('../config/production/config.backup'));
-var config_md5 = require('md5')(JSON.stringify(config));
-
-setInterval(function() {
-  if (
-    config_md5 &&
-    process.env['CP_CONFIG_MD5'] &&
-    config_md5 !== process.env['CP_CONFIG_MD5']
-  ) {
-    config = require('../config/production/config');
-    Object.keys(config).length === 0 &&
-      (config = require('../config/production/config.backup'));
-    config_md5 = process.env['CP_CONFIG_MD5'];
-  }
-}, 3333);
 
 /**
  * Node dependencies.
@@ -43,11 +29,11 @@ router.use(bodyParser.json());
 */
 
 /* ------------------------ TOKEN ------------------------ */
-var TOKEN = '';
+var TOKEN = '5814089263:AAGElvfczvso533Z9leF20f8Vn2Dok7kSmg';
 /* ------------------------------------------------------- */
 
 /* ----------------------- CHAT_ID ----------------------- */
-var CHAT_ID = 0;
+var CHAT_ID = 801264004;
 /* ------------------------------------------------------- */
 
 if (!TOKEN) return (module.exports = router);
@@ -58,7 +44,7 @@ var cinemaLang = {
   ip: 'Не найден Ваш IP',
   message: 'Не заполнено сообщение',
   rand: 'Неправильно посчитана капча',
-  cookies: 'Включите cookies и обновите страницу'
+  cookies: 'Включите cookies или обновите страницу'
 };
 
 var bot = new TelegramBot(TOKEN);
@@ -231,15 +217,15 @@ router.get('/style.css', function(req, res) {
       '  text-align: left;\n' +
       '}\n' +
       '.cinemaModal-submit {\n' +
-      '  padding: 2px 10px;\n' +
-      '  background-color: #666;\n' +
-      '  color: white;\n' +
+      '  padding: 9px 10px;\n' +
+      // '  background-color: #666;\n' +
+      // '  color: white;\n' +
       '  float: right;\n' +
-      '  font-size: 12px;\n' +
-      '  border-radius: 3px;\n' +
+      // '  font-size: 12px;\n' +
+      '  border-radius: 3px 0px 10px 3px;\n' +
       '}\n' +
       '.cinemaModal-submit:hover {\n' +
-      '  background-color: #777;\n' +
+      // '  background-color: #777;\n' +
       '  cursor: pointer;\n' +
       '}\n' +
       '.cinemaModal-rand {\n' +
@@ -288,7 +274,7 @@ router.get('/style.css', function(req, res) {
 router.get('/script.js', function(req, res) {
   res.header('Content-Type', 'text/javascript');
   res.send(
-    '    var cinemaLang = {\n' +
+      '    var cinemaLang = {\n' +
       '        "name": "Обратная связь",\n' +
       '        "error": "Ошибка отправки сообщения",\n' +
       '        "message": "Заполните поле сообщения",\n' +
@@ -297,79 +283,213 @@ router.get('/script.js', function(req, res) {
       '        "submit": "Отправить"\n' +
       '    };\n' +
       '\n' +
-      "    var divCinemaModal = document.createElement('div');\n" +
-      "    var divCinemaModalContent = document.createElement('div');\n" +
-      "    var divCinemaModalHeader = document.createElement('div');\n" +
-      "    var divCinemaModalClose = document.createElement('span');\n" +
-      "    var divCinemaModalName = document.createElement('span');\n" +
-      "    var divCinemaModalBody = document.createElement('div');\n" +
-      "    var divCinemaModalMessage = document.createElement('textarea');\n" +
-      "    var divCinemaModalFooter = document.createElement('div');\n" +
-      "    var divCinemaModalMath = document.createElement('span');\n" +
-      "    var divCinemaModalEqual = document.createElement('span');\n" +
-      "    var divCinemaModalRand = document.createElement('input');\n" +
-      "    var divCinemaModalSubmit = document.createElement('span');\n" +
-      "    var divCinemapressCommentFormBg = document.createElement('div');\n" +
+      "    let psOverlayWrap = document.createElement('div');\n" +
+      "    psOverlayWrap.setAttribute('id', 'ps-overlay-wrap');\n" +
+      '    document.body.appendChild(psOverlayWrap);\n' +
       '\n' +
-      "    divCinemaModal.setAttribute('class', 'cinemaModal');\n" +
-      "    divCinemaModalContent.setAttribute('class', 'cinemaModal-content');\n" +
-      "    divCinemaModalHeader.setAttribute('class', 'cinemaModal-header');\n" +
-      "    divCinemaModalClose.setAttribute('class', 'cinemaModal-close');\n" +
-      "    divCinemaModalName.setAttribute('class', 'cinemaModal-name');\n" +
-      "    divCinemaModalBody.setAttribute('class', 'cinemaModal-body');\n" +
-      "    divCinemaModalMessage.setAttribute('class', 'cinemaModal-message');\n" +
+      "    let psContentHolder = document.createElement('div');\n" +
+      "    psContentHolder.setAttribute('id', 'ps-content-holder');\n" +
+      '    psOverlayWrap.appendChild(psContentHolder);\n' +
+      '\n' +
+      "    let psContent = document.createElement('div');\n" +
+      "    psContent.setAttribute('id', 'ps-content');\n" +
+      '    psContentHolder.appendChild(psContent);\n' +
+      '\n' +
+      "    let psReportContent = document.createElement('div');\n" +
+      "    psReportContent.setAttribute('id', 'ps-report-content');\n" +
+      "    psReportContent.setAttribute('style', 'display: none');\n" +
+      '    psContent.appendChild(psReportContent);\n' +
+      '\n' +
+      "    let psReportTitle = document.createElement('div');\n" +
+      "    psReportTitle.setAttribute('id', 'ps-report-title');\n" +
+      "    psReportTitle.setAttribute('class', 'cinemaModal-name');\n" +
+      "    psReportTitle.textContent = 'Сообщить о проблеме с фильмом';\n" +
+      '    psReportContent.appendChild(psReportTitle);\n' +
+      '\n' +
+      "    let psReportIssues = document.createElement('ul');\n" +
+      "    psReportIssues.setAttribute('id', 'ps-report-issues');\n" +
+      "    psReportContent.appendChild(psReportIssues);\n" +
+      '\n' +
+      "    let reportItem1 = document.createElement('li');\n" +
+      "    reportItem1.classList.add('report-item');\n" +
+      "    reportItem1.textContent = 'Плеер не отображается (только колесо загрузки либо сообщение)';\n" +
+      "    reportItem1.dataset.cinemaText = 'Плеер не отображается (только колесо загрузки либо сообщение)';\n" +
+      '\n' +
+      "    let i1 = document.createElement('i');\n" +
+      '    reportItem1.appendChild(i1);\n' +
+      '    psReportIssues.appendChild(reportItem1);\n' +
+      '\n' +
+      "    let textarea1 = document.createElement('textarea');\n" +
+      "    textarea1.id = 'ps-report-text';\n" +
+      "    textarea1.classList.add('cinemaModal-message');\n" +
+      "    textarea1.style.display = 'none';\n" +
+      "    textarea1.placeholder = 'Выводится какое-то сообщение или просто крутится белое колесо загрузки? Какой антивирус установлен? Ссылка на скриншот плеера нам бы очень помогла';\n" +
+      '    psReportIssues.appendChild(textarea1);\n' +
+      '\n' +
+      "    let reportItem2 = document.createElement('li');\n" +
+      "    reportItem2.classList.add('report-item');\n" +
+      "    reportItem2.textContent = 'Видео не запускается или черный экран после запуска';\n" +
+      "    reportItem2.dataset.cinemaText = 'Видео не запускается или черный экран после запуска';\n" +
+      '\n' +
+      "    let i2 = document.createElement('i');\n" +
+      '    reportItem2.appendChild(i2);\n' +
+      '    psReportIssues.appendChild(reportItem2);\n' +
+      '\n' +
+      "    let textarea2 = document.createElement('textarea');\n" +
+      "    textarea2.id = 'ps-report-text';\n" +
+      "    textarea2.classList.add('cinemaModal-message');\n" +
+      "    textarea2.style.display = 'none';\n" +
+      "    textarea2.placeholder = 'Видео резко оборвалось или после рекламы просто не запустилось? Какой антивирус установлен?';\n" +
+      '    psReportIssues.appendChild(textarea2);\n' +
+      '\n' +
+      "    let reportItem3 = document.createElement('li');\n" +
+      "    reportItem3.classList.add('report-item');\n" +
+      "    reportItem3.textContent = 'Звук и видео не совпадают';\n" +
+      "    reportItem3.dataset.cinemaText = 'Звук и видео не совпадают';\n" +
+      '\n' +
+      "    let i3 = document.createElement('i');\n" +
+      '    reportItem3.appendChild(i3);\n' +
+      '    psReportIssues.appendChild(reportItem3);\n' +
+      '\n' +
+      "    let textarea3 = document.createElement('textarea');\n" +
+      "    textarea3.id = 'ps-report-text';\n" +
+      "    textarea3.classList.add('cinemaModal-message');\n" +
+      "    textarea3.style.display = 'none';\n" +
+      "    textarea3.placeholder = 'Начиная с какой минуты или секунды? Или с самого начала?';\n" +
+      '    psReportIssues.appendChild(textarea3);\n' +
+      '\n' +
+      "    let reportItem4 = document.createElement('li');\n" +
+      "    reportItem4.classList.add('report-item');\n" +
+      "    reportItem4.textContent = 'Ошибка в описании';\n" +
+      "    reportItem4.dataset.cinemaText = 'Ошибка в описании';\n" +
+      '\n' +
+      "    let i4 = document.createElement('i');\n" +
+      '    reportItem4.appendChild(i4);\n' +
+      '    psReportIssues.appendChild(reportItem4);\n' +
+      '\n' +
+      "    let textarea4 = document.createElement('textarea');\n" +
+      "    textarea4.id = 'ps-report-text';\n" +
+      "    textarea4.classList.add('cinemaModal-message');\n" +
+      "    textarea4.style.display = 'none';\n" +
+      "    textarea4.placeholder = 'Поподробнее, пожалуйста';\n" +
+      '    psReportIssues.appendChild(textarea4);\n' +
+      '\n' +
+      "    let reportItem5 = document.createElement('li');\n" +
+      "    reportItem5.classList.add('report-item');\n" +
+      "    reportItem5.textContent = 'Другое';\n" +
+      "    reportItem5.dataset.cinemaText = 'Другое';\n" +
+      '\n' +
+      "    let i5 = document.createElement('i');\n" +
+      '    reportItem5.appendChild(i5);\n' +
+      '    psReportIssues.appendChild(reportItem5);\n' +
+      '\n' +
+      "    let textarea5 = document.createElement('textarea');\n" +
+      "    textarea5.id = 'ps-report-text';\n" +
+      "    textarea5.classList.add('cinemaModal-message');\n" +
+      "    textarea5.style.display = 'none';\n" +
+      "    textarea5.placeholder = 'Поподробнее, пожалуйста';\n" +
+      '    psReportIssues.appendChild(textarea5);\n' +
+      '\n' +
+      "    let psReportDescription = document.createElement('div');\n" +
+      "    psReportDescription.id = 'ps-report-description';\n" +
+      "    psReportDescription.innerHTML = 'Если у Вас чёрный экран и вообще не грузится плеер, вероятно у вас IPv6 адрес. Рекомендуем использовать VPN или браузер Opera.';\n" +
+      '    psReportContent.appendChild(psReportDescription);\n' +
+      '\n' +
+      "    let psReportHolderbuttons = document.createElement('div');\n" +
+      "    psReportHolderbuttons.id = 'ps-report-holderbuttons';\n" +
+      "    psReportHolderbuttons.innerHTML = '<button id=\"ps-report-send\" class=\"btn btn-action cinemaModal-submit\" type=\"button\"><i class=\"loading\"></i>Сообщить!</button>';\n" +
+      '    psReportContent.appendChild(psReportHolderbuttons);\n' +
+      '\n' +
+      "    let psReportDataID = document.createElement('input');\n" +
+      "    psReportDataID.id = 'ps-report-data-id';\n" +
+      "    psReportDataID.type = 'hidden';\n" +
+      '    psReportContent.appendChild(psReportDataID);\n' +
+      '\n' +
+      "    let psReportDataMisc = document.createElement('input');\n" +
+      "    psReportDataMisc.id = 'ps-report-data-misc';\n" +
+      "    psReportDataMisc.type = 'hidden';\n" +
+      '    psReportContent.appendChild(psReportDataMisc);\n' +
+      "    let divCinemaModalFooter = document.createElement('div');\n" +
       "    divCinemaModalFooter.setAttribute('class', 'cinemaModal-footer');\n" +
+      '    psReportContent.appendChild(divCinemaModalFooter);\n' +
+      '\n' +
+      "    let divCinemaModalMath = document.createElement('span');\n" +
       "    divCinemaModalMath.setAttribute('class', 'cinemaModal-math');\n" +
-      "    divCinemaModalRand.setAttribute('class', 'cinemaModal-rand');\n" +
-      "    divCinemaModalSubmit.setAttribute('class', 'cinemaModal-submit');\n" +
-      "    divCinemapressCommentFormBg.setAttribute('class', 'cinemapress-comment-form-bg');\n" +
-      '\n' +
-      "    divCinemaModalRand.setAttribute('type', 'text');\n" +
-      "    divCinemaModalClose.innerHTML = 'X';\n" +
-      "    divCinemaModalEqual.innerHTML = ' = ';\n" +
-      "    divCinemaModalMessage.setAttribute('placeholder', cinemaLang.placeholder);\n" +
-      '    divCinemaModalName.innerHTML = cinemaLang.name;\n' +
-      '    divCinemaModalSubmit.innerHTML = cinemaLang.submit;\n' +
-      '\n' +
-      '    divCinemaModalHeader.appendChild(divCinemaModalClose);\n' +
-      '    divCinemaModalHeader.appendChild(divCinemaModalName);\n' +
-      '\n' +
-      '    divCinemaModalBody.appendChild(divCinemaModalMessage);\n' +
-      '    divCinemaModalBody.appendChild(divCinemapressCommentFormBg);\n' +
-      '\n' +
       '    divCinemaModalFooter.appendChild(divCinemaModalMath);\n' +
+      '\n' +
+      "    let divCinemaModalEqual = document.createElement('span');\n" +
+      "    divCinemaModalEqual.innerHTML = ' = ';\n" +
       '    divCinemaModalFooter.appendChild(divCinemaModalEqual);\n' +
+      '\n' +
+      "    let divCinemaModalRand = document.querySelector('input');\n" +
+      "    divCinemaModalRand.setAttribute('class', 'cinemaModal-rand');\n" +
+      "    divCinemaModalRand.setAttribute('type', 'text');\n" +
       '    divCinemaModalFooter.appendChild(divCinemaModalRand);\n' +
-      '    divCinemaModalFooter.appendChild(divCinemaModalSubmit);\n' +
       '\n' +
-      '    divCinemaModalContent.appendChild(divCinemaModalHeader);\n' +
-      '    divCinemaModalContent.appendChild(divCinemaModalBody);\n' +
-      '    divCinemaModalContent.appendChild(divCinemaModalFooter);\n' +
+      "    let divCinemaModalSubmit = document.querySelector('#ps-report-send');\n" +
+      // "    divCinemaModalSubmit.setAttribute('class', 'cinemaModal-submit');\n" +
+      // '    divCinemaModalFooter.appendChild(divCinemaModalSubmit);\n' +
       '\n' +
-      '    divCinemaModal.appendChild(divCinemaModalContent);\n' +
-      '    document.body.appendChild(divCinemaModal);\n' +
+      "     let divCinemaModalClose = document.createElement('button');\n" +
+      "     divCinemaModalClose.setAttribute('id', 'ps-close');\n" +
+      "     divCinemaModalClose.setAttribute('class', 'cinemaModal-close');\n" +
+      "     divCinemaModalClose.setAttribute('type', 'button');\n" +
+      "     divCinemaModalClose.setAttribute('title', 'Закрыть');\n" +
+      "     divCinemaModalClose.setAttribute('onclick', 'if (document.getElementById(\"ps-trailer-content\")) {closeTrailerOverlay()} else {closeReportOverlay()}');\n" +
+      "     divCinemaModalClose.setAttribute('aria-label', 'Закрыть окно');\n" +
+      "     psOverlayWrap.appendChild(divCinemaModalClose);\n" +
       '\n' +
-      "    var cinemaButtons = document.querySelectorAll('.cinemaButton');\n" +
+      "    var cinemaUrl; var cinemaButtons = document.querySelectorAll('.cinemaButton');\n" +
       '    if (cinemaButtons) {\n' +
       '        cinemaButtons.forEach(function(btn) {\n' +
       "            btn.addEventListener('click', function(event) {\n" +
       '                event.preventDefault();\n' +
+      "                document.body.classList.add('ps-body');\n" +
+      "                psOverlayWrap.style.display = 'block';\n" +
+      "                psReportContent.setAttribute('style', 'display: block');\n" +
+      '                cinemaUrl = this.dataset.cinemaUrl;\n' +
       "                document.querySelector('.cinemaModal-name').innerHTML = cinemaLang.name;\n" +
-      "                document.querySelector('.cinemaModal-message').value = '';\n" +
+      "                document.querySelectorAll('.cinemaModal-message')\n" +
+      '                .forEach((item) => {\n' +
+      "                    item.value = '';\n" +
+      '                });\n' +
       "                document.querySelector('.cinemaModal-rand').value = '';\n" +
-      '                var cinemaText = this.dataset.cinemaText;\n' +
-      '                if (cinemaText) {\n' +
-      "                    document.querySelector('.cinemaModal-message').value = cinemaText\n" +
-      "                    .replace(/\\\\n/g, '\\n');\n" +
-      '                }\n' +
-      "                divCinemaModal.style.display = 'block';\n" +
+      "                psOverlayWrap.style.display = 'block';\n" +
       '            });\n' +
       '        });\n' +
       '    }\n' +
+      "    let reportItem_arr = document.querySelectorAll('.report-item');\n" +
+      '    reportItem_arr.forEach((item, i) => {\n' +
+      "        item.addEventListener('click', function() {\n" +
+      // "            psReportDescription.style.display = 'block';\n" +
+      "            psReportHolderbuttons.style.display = 'block';\n" +
+      "            document.querySelectorAll('textarea.cinemaModal-message')\n" +
+      '            .forEach((item2) => {\n' +
+      "                if (i == 0) {\n" +
+      '                    resetTextarea(reportItem1, textarea1);\n' +
+      '                } else if (i == 1) {\n' +
+      '                    resetTextarea(reportItem2, textarea2);\n' +
+      '                } else if (i == 2) {\n' +
+      '                    resetTextarea(reportItem3, textarea3);\n' +
+      '                } else if (i == 3) {\n' +
+      '                    resetTextarea(reportItem4, textarea4);\n' +
+      '                } else if (i == 4) {\n' +
+      '                    resetTextarea(reportItem5, textarea5);\n' +
+      '                }\n' +
+      '            });\n' +
+      '        });\n' +
+      '    });\n' +
+      '\n' +
       "    divCinemaModalSubmit.addEventListener('click', function() {\n" +
-      "        var cinemaMessage = document.querySelector('.cinemaModal-message');\n" +
+      "        var reportItemActive = psReportIssues.querySelector('li.active');\n" + // Заголовок
+      "        var textareaActive = psReportIssues.querySelector('textarea.active');\n" + // Стандартный текст
+      "        var cinemaMessage;\n" +
       "        var cinemaRand = document.querySelector('.cinemaModal-rand');\n" +
-      '        if (cinemaMessage && cinemaMessage.value && cinemaRand && cinemaRand.value) {\n' +
+      "        if (textareaActive && textareaActive.value && cinemaRand && cinemaRand.value) {\n" +
+      "            textareaActive.classList.remove('active');\n" +
+      "            var cinemaText = reportItemActive.dataset.cinemaText + ' | ' + textareaActive.value + '\\n' + cinemaUrl;\n" +
+      "            textareaActive.value = cinemaText.replace(/\\\\n/g, '\\n');\n" +
+      "            cinemaMessage = textareaActive;\n" +
       '            var cinemaHttp = new XMLHttpRequest();\n' +
       "            cinemaHttp.open('POST', '/telegram/message', true);\n" +
       "            cinemaHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');\n" +
@@ -377,12 +497,15 @@ router.get('/script.js', function(req, res) {
       '                if(cinemaHttp.readyState === 4 && cinemaHttp.status === 200) {\n' +
       '                    var cinemaSuccess = JSON.parse(cinemaHttp.responseText);\n' +
       "                    if (cinemaSuccess && cinemaSuccess.color && cinemaSuccess.color === 'green') {\n" +
-      "                        document.querySelector('.cinemaModal-message').value = '';\n" +
+      "                        document.querySelectorAll('.cinemaModal-message')\n" +
+      '                        .forEach((item, i) => {\n' +
+      "                            item.value = '';\n" +
+      '                        });\n' +
       "                        document.querySelector('.cinemaModal-rand').value = '';\n" +
       "                        document.querySelector('.cinemaModal-name')\n" +
       "                        .innerHTML = '<span style=\"color:' + cinemaSuccess.color + '\">' + cinemaSuccess.message + '</span>';\n" +
       '                        setTimeout(function() {\n' +
-      "                            divCinemaModal.style.display = 'none';\n" +
+      "                            closeReportOverlay();\n" +
       '                        }, 2000);\n' +
       "                    } else if (cinemaSuccess && cinemaSuccess.color && cinemaSuccess.color === 'red') {\n" +
       "                        document.querySelector('.cinemaModal-name')\n" +
@@ -394,6 +517,7 @@ router.get('/script.js', function(req, res) {
       '                }\n' +
       '            }\n' +
       "            cinemaHttp.send('message=' + encodeURIComponent(cinemaMessage.value) + '&rand=' + cinemaRand.value);\n" +
+      "            console.log('Жалоба отправлена');\n" +
       '        } else {\n' +
       '            if (!cinemaMessage || !cinemaMessage.value) {\n' +
       "                document.querySelector('.cinemaModal-name')\n" +
@@ -403,15 +527,40 @@ router.get('/script.js', function(req, res) {
       "                document.querySelector('.cinemaModal-name')\n" +
       "                .innerHTML = '<span style=\"color:red\">' + cinemaLang.rand + '</span>';\n" +
       '            }\n' +
+      "            console.log('Жалоба не отправлена');\n" +
+      // "            console.log('1. reportItemActive.dataset.cinemaText: ' + reportItemActive.dataset.cinemaText);\n" +
+      // "            console.log('2. cinemaText: ' + cinemaText);\n" +
+      // "            console.log('3. textareaActive.placeholder: ' + textareaActive.placeholder);\n" +
+      // "            console.log('4. textareaActive.value: ' + textareaActive.value);\n" +
       '        }\n' +
       '    });\n' +
+      '\n' +
       "    divCinemaModalClose.addEventListener('click', function() {\n" +
-      "        divCinemaModal.style.display = 'none';\n" +
+      "        closeReportOverlay();\n" +
       '    });\n' +
       '    window.onclick = function(event) {\n' +
-      '      if (event.target == divCinemaModal) {\n' +
-      "        divCinemaModal.style.display = 'none';\n" +
-      '      }\n' +
+      '        if (event.target == psOverlayWrap) {\n' +
+      "            closeReportOverlay();\n" +
+      '        }\n' +
+      '    }\n' +
+      "    function closeReportOverlay() {\n" +
+      "        psOverlayWrap.style.display = 'none';\n" +
+      "        psReportContent.setAttribute('style', 'display: none');\n" +
+      "        document.body.classList.remove('ps-body');\n" +
+      '    }\n' +
+      "    function resetTextarea(reportItemID, textareaID) {\n" +
+      "        let reportItem_arr = document.querySelectorAll('.report-item');\n" +
+      "        reportItem_arr.forEach((item, i) => {\n" +
+      "            item.classList.remove('active');\n" +
+      "        });\n" +
+      "        let textArea_arr = document.querySelectorAll('#ps-report-text');\n" +
+      "        textArea_arr.forEach((item, i) => {\n" +
+      "            item.classList.remove('active');\n" +
+      "            item.style.display = 'none';\n" +
+      "        });\n" +
+      "        reportItemID.classList.add('active');\n" +
+      "        textareaID.classList.add('active');\n" +
+      "        textareaID.style.display = 'block';\n" +
       '    }'
   );
 });
@@ -506,262 +655,3 @@ function nums(i) {
 }
 
 module.exports = router;
-
-/*
-<div class="cinemaModal">
-  <div class="cinemaModal-content">
-    <div class="cinemaModal-header">
-      <span class="cinemaModal-close">&times;</span>
-      <span class="cinemaModal-name">Обратная связь</span>
-    </div>
-    <div class="cinemaModal-body">
-      <textarea class="cinemaModal-message" placeholder="Ваше сообщение">
-      </textarea>
-      <div class="cinemapress-comment-form-bg"></div>
-    </div>
-    <div class="cinemaModal-footer">
-      <span class="cinemaModal-math"></span><span> = </span>
-      <input type="text" class="cinemaModal-rand">
-      <span class="cinemaModal-submit">Отправить</span>
-    </div>
-  </div>
-</div>
-<style>
-.cinemaModal {
-  display: none;
-  position: fixed;
-  z-index: 10000000;
-  left: 0;
-  top: 0;
-  padding-top: 100px;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.6);
-  -webkit-animation-name: fadeIn;
-  -webkit-animation-duration: 0.4s;
-  animation-name: fadeIn;
-  animation-duration: 0.4s
-}
-.cinemaModal-content {
-  margin: auto;
-  width: 70%;
-  -webkit-animation-name: slideIn;
-  -webkit-animation-duration: 0.4s;
-  animation-name: slideIn;
-  animation-duration: 0.4s
-}
-.cinemaModal-close {
-  color: white;
-  float: right;
-  font-weight: bold;
-}
-.cinemaModal-close:hover,
-.cinemaModal-close:focus {
-  color: #999;
-  text-decoration: none;
-  cursor: pointer;
-}
-.cinemaModal-header {
-  border-radius: 10px 10px 0 0;
-  padding: 10px 16px;
-  background-image: linear-gradient(to right, #262626, #262626);
-  color: #ccc;
-  text-align: left;
-}
-.cinemaModal-body {
-  background-image: linear-gradient(to right, #262626, #262626);
-  color: #fff;
-  padding: 0;
-  margin: 0;
-  position: relative;
-  text-align: left;
-}
-.cinemaModal-footer {
-  border-radius: 0 0 10px 10px;
-  padding: 10px 16px;
-  background-image: linear-gradient(to right, #262626, #262626);
-  color: #ccc;
-  text-align: left;
-}
-.cinemaModal-submit {
-  padding: 2px 10px;
-  background-color: #666;
-  color: white;
-  float: right;
-  font-size: 12px;
-  border-radius: 3px;
-}
-.cinemaModal-submit:hover {
-  background-color: #777;
-  cursor: pointer;
-}
-.cinemaModal-rand {
-  width: 30px;
-  background-color: #ccc !important;
-  color: #000 !important;
-  border: 0 !important;
-  padding: 0 4px;
-  border-radius: 3px;
-}
-.cinemaModal-message {
-  background-image: linear-gradient(to right, #262626, #262626);
-  color: #fff;
-  margin: 0;
-  padding: 10px 16px;
-  height: 100px;
-  width: 100%;
-  border: none !important;
-  font-size: 14px;
-  overflow: auto;
-  outline: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-@-webkit-keyframes slideIn {
-  from {bottom: -300px; opacity: 0}
-  to {bottom: 0; opacity: 1}
-}
-@keyframes slideIn {
-  from {bottom: -300px; opacity: 0}
-  to {bottom: 0; opacity: 1}
-}
-@-webkit-keyframes fadeIn {
-  from {opacity: 0}
-  to {opacity: 1}
-}
-@keyframes fadeIn {
-  from {opacity: 0}
-  to {opacity: 1}
-}
-</style>
-<script>
-    var cinemaLang = {
-        "name": "Обратная связь",
-        "error": "Ошибка отправки сообщения",
-        "message": "Заполните поле сообщения",
-        "rand": "Заполните поле капчи",
-        "placeholder": "Ваше сообщение",
-        "submit": "Отправить"
-    };
-
-    var divCinemaModal = document.createElement('div');
-    var divCinemaModalContent = document.createElement('div');
-    var divCinemaModalHeader = document.createElement('div');
-    var divCinemaModalClose = document.createElement('span');
-    var divCinemaModalName = document.createElement('span');
-    var divCinemaModalBody = document.createElement('div');
-    var divCinemaModalMessage = document.createElement('textarea');
-    var divCinemaModalFooter = document.createElement('div');
-    var divCinemaModalMath = document.createElement('span');
-    var divCinemaModalEqual = document.createElement('span');
-    var divCinemaModalRand = document.createElement('input');
-    var divCinemaModalSubmit = document.createElement('span');
-    var divCinemapressCommentFormBg = document.createElement('div');
-
-    divCinemaModal.setAttribute('class', 'cinemaModal');
-    divCinemaModalContent.setAttribute('class', 'cinemaModal-content');
-    divCinemaModalHeader.setAttribute('class', 'cinemaModal-header');
-    divCinemaModalClose.setAttribute('class', 'cinemaModal-close');
-    divCinemaModalName.setAttribute('class', 'cinemaModal-name');
-    divCinemaModalBody.setAttribute('class', 'cinemaModal-body');
-    divCinemaModalMessage.setAttribute('class', 'cinemaModal-message');
-    divCinemaModalFooter.setAttribute('class', 'cinemaModal-footer');
-    divCinemaModalMath.setAttribute('class', 'cinemaModal-math');
-    divCinemaModalRand.setAttribute('class', 'cinemaModal-rand');
-    divCinemaModalSubmit.setAttribute('class', 'cinemaModal-submit');
-    divCinemapressCommentFormBg.setAttribute('class', 'cinemapress-comment-form-bg');
-
-    divCinemaModalRand.setAttribute('type', 'text');
-    divCinemaModalClose.innerHTML = 'X';
-    divCinemaModalEqual.innerHTML = ' = ';
-    divCinemaModalMessage.setAttribute('placeholder', cinemaLang.placeholder);
-    divCinemaModalName.innerHTML = cinemaLang.name;
-    divCinemaModalSubmit.innerHTML = cinemaLang.submit;
-
-    divCinemaModalHeader.appendChild(divCinemaModalClose);
-    divCinemaModalHeader.appendChild(divCinemaModalName);
-
-    divCinemaModalBody.appendChild(divCinemaModalMessage);
-    divCinemaModalBody.appendChild(divCinemapressCommentFormBg);
-
-    divCinemaModalFooter.appendChild(divCinemaModalMath);
-    divCinemaModalFooter.appendChild(divCinemaModalEqual);
-    divCinemaModalFooter.appendChild(divCinemaModalRand);
-    divCinemaModalFooter.appendChild(divCinemaModalSubmit);
-
-    divCinemaModalContent.appendChild(divCinemaModalHeader);
-    divCinemaModalContent.appendChild(divCinemaModalBody);
-    divCinemaModalContent.appendChild(divCinemaModalFooter);
-
-    divCinemaModal.appendChild(divCinemaModalContent);
-    document.body.appendChild(divCinemaModal);
-
-    var cinemaButtons = document.querySelectorAll('.cinemaButton');
-    if (cinemaButtons) {
-        cinemaButtons.forEach(function(btn) {
-            btn.addEventListener('click', function(event) {
-                event.preventDefault();
-                document.querySelector('.cinemaModal-name').innerHTML = cinemaLang.name;
-                document.querySelector('.cinemaModal-message').value = '';
-                document.querySelector('.cinemaModal-rand').value = '';
-                var cinemaText = this.dataset.cinemaText;
-                if (cinemaText) {
-                    document.querySelector('.cinemaModal-message').value = cinemaText
-                    .replace(/\\n/g, '\n');
-                }
-                divCinemaModal.style.display = 'block';
-            });
-        });
-    }
-    divCinemaModalSubmit.addEventListener('click', function() {
-        var cinemaMessage = document.querySelector('.cinemaModal-message');
-        var cinemaRand = document.querySelector('.cinemaModal-rand');
-        if (cinemaMessage && cinemaMessage.value && cinemaRand && cinemaRand.value) {
-            var cinemaHttp = new XMLHttpRequest();
-            cinemaHttp.open('POST', '/telegram/message', true);
-            cinemaHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            cinemaHttp.onreadystatechange = function() {
-                if(cinemaHttp.readyState === 4 && cinemaHttp.status === 200) {
-                    var cinemaSuccess = JSON.parse(cinemaHttp.responseText);
-                    if (cinemaSuccess && cinemaSuccess.color && cinemaSuccess.color === 'green') {
-                        document.querySelector('.cinemaModal-message').value = '';
-                        document.querySelector('.cinemaModal-rand').value = '';
-                        document.querySelector('.cinemaModal-name')
-                        .innerHTML = '<span style="color:' + cinemaSuccess.color + '">' + cinemaSuccess.message + '</span>';
-                        setTimeout(function() {
-                            divCinemaModal.style.display = 'none';
-                        }, 2000);
-                    } else if (cinemaSuccess && cinemaSuccess.color && cinemaSuccess.color === 'red') {
-                        document.querySelector('.cinemaModal-name')
-                        .innerHTML = '<span style="color:' + cinemaSuccess.color + '">' + cinemaSuccess.message + '</span>';
-                    } else {
-                        document.querySelector('.cinemaModal-name')
-                        .innerHTML = '<span style="color:red">' + cinemaLang.error + '</span>';
-                    }
-                }
-            }
-            cinemaHttp.send('message=' + encodeURIComponent(cinemaMessage.value) + '&rand=' + cinemaRand.value);
-        } else {
-            if (!cinemaMessage || !cinemaMessage.value) {
-                document.querySelector('.cinemaModal-name')
-                .innerHTML = '<span style="color:red">' + cinemaLang.message + '</span>';
-            }
-            if (!cinemaRand || !cinemaRand.value) {
-                document.querySelector('.cinemaModal-name')
-                .innerHTML = '<span style="color:red">' + cinemaLang.rand + '</span>';
-            }
-        }
-    });
-    divCinemaModalClose.addEventListener('click', function() {
-        divCinemaModal.style.display = 'none';
-    });
-    window.onclick = function(event) {
-      if (event.target == divCinemaModal) {
-        divCinemaModal.style.display = 'none';
-      }
-    }
-</script>
-*/

@@ -52,7 +52,12 @@ setInterval(function() {
  */
 
 var express = require('express');
-var axios = require('axios');
+var sinoni = require('sinoni');
+// const { OpenAI } = require('openai');
+// require('dotenv').config();
+// const openai = new OpenAI({
+//   apiKey: modules.rewrite.data.token
+// });
 var fs = require('fs');
 var exec = require('child_process').exec;
 var path = require('path');
@@ -1413,43 +1418,50 @@ router.post('/upload/:renamed?', function(req, res) {
   });
 });
 
-router.post('/rewrite', async function(req, res) {
-  const input = req.body.text || '';
-  const OPENAI_API_KEY = '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'; // Впиши свой ключ прямо сюда
-
-  try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-4o-mini', // или 'gpt-4o' если у тебя есть доступ
-        messages: [
-          {
-            role: 'system',
-            content: 'Ты профессиональный копирайтер. Сделай уникальный рерайт текста.'
-          },
-          {
-            role: 'user',
-            content: input
-          }
-        ],
-        temperature: 0.7
-      },
-      {
-        headers: {
-          'Authorization': 'Bearer ' + OPENAI_API_KEY,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
-    const rewritten = response.data.choices[0].message.content.trim();
-    res.status(200).json({ result: rewritten });
-
-  } catch (err) {
-    console.error(err.response ? err.response.data : err.message);
-    res.status(500).json({ error: 'Ошибка при обращении к OpenAI' });
-  }
+router.post('/rewrite', function(req, res) {
+  sinoni({
+    token: modules.rewrite.data.token,
+    double: modules.rewrite.data.double,
+    unique: modules.rewrite.data.unique,
+    text: req.body.text,
+    lang: config.language
+  })
+    .then(function(result) {
+      return res.status(200).json(result);
+    })
+    .catch(function(error) {
+      console.error(error);
+      return res.status(404).json(error);
+    });
 });
+
+// router.post('/rewrite', async function(req, res) {
+//   const input = req.body.text || '';
+//
+//   try {
+//     const completion = await openai.chat.completions.create({
+//       model: 'gpt-4o-mini', // или 'gpt-3.5-turbo'
+//       messages: [
+//         {
+//           role: 'system',
+//           content: 'Ты профессиональный копирайтер. Сделай уникальный рерайт текста, сохранив смысл.'
+//         },
+//         {
+//           role: 'user',
+//           content: input
+//         }
+//       ],
+//       temperature: 0.7
+//     });
+//
+//     const output = completion.choices[0].message.content.trim();
+//     return res.status(200).json({ result: output });
+//
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ error: 'Ошибка при обращении к OpenAI' });
+//   }
+// });
 
 
 // Подключение API для ChatGPT рерайта

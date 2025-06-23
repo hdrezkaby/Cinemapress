@@ -909,6 +909,10 @@ router.all('/', function(req, res) {
                       movie_custom.title
                         ? encodeURIComponent(movie_custom.title)
                         : ''
+                    )
+                    .replace(
+                      /\[unique]/,
+                      movie_custom.unique ? movie_custom.unique : ''
                     );
                   players.push(p.url);
                 }
