@@ -54,7 +54,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
-
+app.use(express.json());
+app.use(bodyParser.json());
 app.use(function(req, res, next) {
   if (process.env.NODE_ENV !== 'production') {
     req.start_request = new Date();
@@ -85,6 +86,7 @@ var iframe = require('./routes/iframe');
 var cinemaplayer = require('./routes/cinemaplayer');
 var player = require('./routes/player');
 var episode = require('./routes/episode');
+var rewrite = require('./routes/rewrite');
 var robots = require('./routes/robots');
 var opensearch = require('./routes/opensearch');
 var rss = require('./routes/rss');
@@ -145,6 +147,7 @@ app.use(defence());
 app.use(userinfo(lookup));
 app.use(/^(?:\/mobile-version|\/tv-version|)?\/player.*$/, player);
 app.use(/^(?:\/mobile-version|\/tv-version|)?\/episode.*$/, episode);
+app.use(/^(?:\/mobile-version|\/tv-version|)?\/rewrite/, rewrite);
 app.use(/^(?:\/mobile-version|\/tv-version|)?\/robots\.txt$/, robots);
 app.use(/^(?:\/mobile-version|\/tv-version|)?\/opensearch\.xml$/, opensearch);
 app.use(/^(?:\/mobile-version|\/tv-version|)?\/embed/, embed);

@@ -537,6 +537,7 @@ function structureMovieApi(movie) {
     data.sound = movie.translate;
   }
   data.lastmod = (custom && custom.lastmod) || null;
+  data.unique = (custom && custom.unique) || false;
   return data;
 }
 
