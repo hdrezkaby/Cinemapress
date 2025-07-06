@@ -161,8 +161,8 @@ function moviesApi(query, ip, callback) {
   if (limit > 100) {
     return callback('Max 100 movies per page');
   }
-  if (max_matches > 1000) {
-    return callback('Max 1 000 movies');
+  if (max_matches > 1000000) {
+    return callback('Max 1 000 000 movies');
   }
   delete query['page'];
   delete query['limit'];
@@ -537,13 +537,12 @@ function structureMovieApi(movie) {
     data.sound = movie.translate;
   }
   data.lastmod = (custom && custom.lastmod) || null;
-  data.unique = (custom && custom.unique) || false;
   return data;
 }
 
 function createImgUrl(type, size, id) {
   id = id ? ('' + id).trim() : '';
-  var image = '/files/poster/no.jpg';
+  var image = '/files/poster/no.webp';
   var source = 'not';
 
   var url_url = /^(http|\/)/.test(id);
@@ -551,12 +550,12 @@ function createImgUrl(type, size, id) {
   var url_ya = /^\/(get-kinopoisk-image|get-kino-vod-films-gallery)[a-z0-9\-]*$/i.test(
     id
   );
-  var url_shikimori = /^\/(animes|mangas|screenshots)-[a-z0-9]+-[a-z0-9]+\.(jpg|jpeg|gif|png)$/i.test(
+  var url_shikimori = /^\/(animes|mangas|screenshots)-[a-z0-9]+-[a-z0-9]+\.(jpg|jpeg|gif|png|webp)$/i.test(
     id
   );
-  var url_tvmaze = /^\/[0-9]{1,3}-[0-9]*\.(jpg|png)$/.test(id);
-  var url_tmdb = /^\/[a-z0-9]*\.(jpg|png)$/i.test(id);
-  var url_imdb = /^\/[a-z0-9\-_.,@]*\.(jpg|png)$/i.test(id);
+  var url_tvmaze = /^\/[0-9]{1,3}-[0-9]*\.(jpg|png|webp)$/.test(id);
+  var url_tmdb = /^\/[a-z0-9]*\.(jpg|png|webp)$/i.test(id);
+  var url_imdb = /^\/[a-z0-9\-_.,@]*\.(jpg|png|webp)$/i.test(id);
 
   if (url_tmdb) {
     source = 'tmdb';
@@ -576,7 +575,7 @@ function createImgUrl(type, size, id) {
 
   switch (source) {
     case 'kinopoisk':
-      image = '/files/' + type + '/' + size + '/' + id + '.jpg';
+      image = '/files/' + type + '/' + size + '/' + id + ('.jpg' || '.webp');
       break;
     case 'yandex':
       image = '/files/' + type + '/' + size + id + '.jpg';

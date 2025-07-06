@@ -23,6 +23,7 @@ router.post('/', async (req, res) => {
 
   if (title.trim() && description.trim()) {
     try {
+      const id = req.query.id || req.body.id || movieId;
       const prompt = `Перепиши описание фильма "${title}" более красиво и привлекательно для сайта. Описание: ${description}`;
       const completion = await axios.post(
         'https://api.openai.com/v1/chat/completions',
@@ -48,6 +49,23 @@ router.post('/', async (req, res) => {
         }
       );
       const newDescription = completion.data.choices[0].message.content;
+      console.log('GPT ответ:', newDescription);
+      // отдельно отловим ошибку сохранения
+      try {
+        await new Promise((resolve, reject) => {
+          CP_save.save({
+            id,
+            description: newDescription,
+            custom: JSON.stringify({ unique: true })
+          }, 'rt', (err, result) => {
+            if (err) return reject(err);
+            return resolve(result);
+          });
+        });
+        console.log('Описание сохранено!');
+      } catch (saveErr) {
+        console.error('❌ Ошибка сохранения описания:', saveErr);
+      }
       res.json({ newDescription });
 
     } catch (err) {
@@ -56,6 +74,7 @@ router.post('/', async (req, res) => {
     }
   } else if (title.trim() && !description.trim()) {
     try {
+      const id = req.query.id || req.body.id || movieId;
       const prompt = `Придумай описание для фильма "${title}" Год выхода: ${year}`;
       const completion = await axios.post(
         'https://api.openai.com/v1/chat/completions',
@@ -81,7 +100,23 @@ router.post('/', async (req, res) => {
         }
       );
       const newDescription = completion.data.choices[0].message.content;
-      // await CP_save.movie({ id, description, unique: true });
+      console.log('GPT ответ:', newDescription);
+      // отдельно отловим ошибку сохранения
+      try {
+        await new Promise((resolve, reject) => {
+          CP_save.save({
+            id,
+            description: newDescription,
+            custom: JSON.stringify({ unique: true })
+          }, 'rt', (err, result) => {
+            if (err) return reject(err);
+            return resolve(result);
+          });
+        });
+        console.log('Описание сохранено!');
+      } catch (saveErr) {
+        console.error('❌ Ошибка сохранения описания:', saveErr);
+      }
       res.json({ newDescription });
 
     } catch (err) {

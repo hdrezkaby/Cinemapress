@@ -1,0 +1,63 @@
+<% if (typeof page.pagination === 'object') { %>
+
+    <div class="b-navigation">
+        <span class="no-page">
+            <span class="b-navigation__prev i-sprt">&nbsp;</span>
+        </span>
+
+        <% /* Первая страница */ %>
+        <% if (page.pagination.first) { %>
+            <a href="<%- page.pagination.first.link %>"><%- page.pagination.first.number %></a>
+        <% } %>
+
+        <% /* Номера страниц до текущей */ %>
+        <% if (page.pagination.prev.length) { %>
+            <% page.pagination.prev.forEach(function (prev) { %>
+                <a href="<%- prev.link %>"><%- prev.number %></a>
+            <% }); %>
+        <% } %>
+
+        <span>
+            <% /* Текуща страница */ %>
+            <%- page.pagination.current %>
+        </span>
+
+        <% /* Номера страниц после текущей */ %>
+        <% if (page.pagination.next.length) { %>
+            <% page.pagination.next.forEach(function (next) { %>
+                <a href="<%- next.link %>"><%- next.number %></a>
+            <% }); %>
+        <% } %>
+
+        <% /* Последняя страница */ %>
+        <% if (page.pagination.last) { %>
+            <a href="<%- page.pagination.last.link %>"><%- page.pagination.last.number %></a>
+        <% } %>
+
+    </div>
+
+<% } %>
+
+
+
+
+<!-- <div class="b-navigation">
+    <span class="no-page">
+        <span class="b-navigation__prev i-sprt">&nbsp;</span>
+    </span> -->
+    <!-- <span>1</span> -->
+    <!-- <a href="https://rezka.ag/page/2/">2</a>
+    <a href="https://rezka.ag/page/3/">3</a>
+    <a href="https://rezka.ag/page/4/">4</a>
+    <a href="https://rezka.ag/page/5/">5</a>
+    <a href="https://rezka.ag/page/6/">6</a>
+    <a href="https://rezka.ag/page/7/">7</a>
+    <a href="https://rezka.ag/page/8/">8</a>
+    <a href="https://rezka.ag/page/9/">9</a>
+    <a href="https://rezka.ag/page/10/">10</a> -->
+    <!-- <span class="nav_ext">...</span> -->
+    <!-- <a href="https://rezka.ag/page/1059/">1059</a> -->
+    <!-- <a href="https://rezka.ag/page/2/">
+        <span class="b-navigation__next i-sprt">&nbsp;</span>
+    </a> -->
+<!-- </div> -->

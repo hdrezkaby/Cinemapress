@@ -1,0 +1,11 @@
+<div class="b-content__inline_item" data-id="23398" data-url="<%- movie.url %>">
+    <div class="b-content__inline_item-cover"> <a href="<%- movie.url %>">
+        <img class="lazy" loading="lazy" src="/files/poster/no.webp" data-src="<%- movie.poster %>" data-cinemapress-src="<%- movie.poster_big %>" width="92" height="100%" alt="Смотреть <%- movie.title %> онлайн в HD качестве ">
+        <% if (movie.type === 1) { %> <span class="cat series"><i class="entity">Сериал</i><i class="icon"></i></span> <% } else { %> <span class="cat films"><i class="entity">Фильм</i><i class="icon"></i></span> <% } %>
+        <!-- <span class="info">Завершен<br>(все серии)</span> <i class="i-sprt play"></i> </a> -->
+        <i class="trailer show-trailer" data-id="23398" data-full="1"><b>Трейлер</b></i>
+    </div>
+    <div class="b-content__inline_item-link"> <a href="<%- movie.url %>"><%- movie.title %></a>
+        <div class="misc"><%- movie.year %>, <%- movie.country %>, <%- movie.genre %></div>
+    </div>
+</div>

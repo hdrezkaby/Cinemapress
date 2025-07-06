@@ -157,14 +157,16 @@ app.use('/' + config.urls.admin, admin);
 app.use(loadavg());
 app.use(/^(?:\/mobile-version|\/tv-version|)?/, website);
 
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   if (res.headersSent) return next();
-  err.status = err.status ? err.status : 404;
-  err.message = err.message ? err.message : 'Not Found';
+  err.status = err.status || 404;
+  err.message = err.message || 'Not Found';
+
   if (err.status === 301 || err.status === 302) {
-    res.writeHead(err.status, { Location: err.message });
+    res.writeHead(err.status, { Location: encodeURI(err.message) });
     return res.end();
   }
+
   return res.status(err.status).render('error', {
     search: config.urls.search,
     status: err.status,

@@ -3,16 +3,520 @@
 <head>
 
     <%- include('includes/head.ejs'); -%>
+    <meta name="description" content="<%= page.description %>">
+
+    <!-- <img class="lazy" loading="lazy" src="https://hdrezka.by/files/content/original/1639047793649-unnamed.png"
+    data-src="https://hdrezka.by/files/content/original/1639047793649-unnamed.png"
+    data-cinemapress-src="https://hdrezka.by/files/content/original/1639047793649-unnamed.png"
+    style="
+    position: fixed;
+    margin: auto;
+    /* margin-top:-160px; */
+    /* max-width: 768px; */
+    width: 100%;
+    /* margin-left: -20%; */
+    margin-top: 16%;
+    z-index: -2;
+    opacity: 0.3;"> -->
+
+    <style>
+      .block {
+        background: rgba(0, 0, 0, 0.3) !important;
+      }
+    </style>
+
 
 </head>
-<body>
+<body class="has-brand pp fixed-header">
 
 <%- include('includes/header.ejs'); -%>
 
-<% if (typeof index === 'object') {
-        for (var type in index) {
-if (index.hasOwnProperty(type) && index[type].length && type === 'episode') {
-index[type].forEach(function (category) { %>
+<style>
+
+body.b-theme__template__night .b-newest_slider_wrapper,
+body.b-theme__template__night .b-newest_slider,
+body.b-theme__template__night .b-newest_slider__list,
+body.b-theme__template__night .b-content {
+    background: #09161cdd;
+}
+
+/* body.b-theme__template__night .b-newest_slider .cntrl {
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: background-color .25s ease-in-out
+}
+
+body.b-theme__template__night .b-newest_slider .cntrl:hover {
+    background-color: rgba(255, 255, 255, 0.15)
+} */
+
+
+.b-newest_slider__title {
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 16px;
+    max-width: 980px;
+    padding-bottom: 12px
+}
+
+.b-newest_slider__title span {
+    border-bottom: 1px dotted #555;
+    color: #555;
+    cursor: pointer;
+    vertical-align: bottom
+}
+
+.b-newest_slider__title span:hover {
+    border-bottom: 0
+}
+
+.b-newest_slider__title span.active {
+    border-bottom: 0;
+    color: #000;
+    cursor: auto
+}
+
+.b-newest_slider__title .show-all {
+    color: #555;
+    display: none;
+    font-size: 13px;
+    line-height: 16px;
+    vertical-align: bottom
+}
+
+.b-newest_slider__title .show-all span {
+    font-size: 14px;
+    font-weight: normal
+}
+
+.b-newest_slider_wrapper {
+    background: #efefef
+}
+
+.b-newest_slider {
+    background: #efefef;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 10px 5px 0;
+    position: relative
+}
+
+/* .b-newest_slider .cntrl {
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    background: #444;
+    background-color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    display: block;
+    height: 100px;
+    position: absolute;
+    top: 80px;
+    text-align: left;
+    vertical-align: top;
+    width: 35px
+}
+
+.b-newest_slider .cntrl:before {
+    font-size: 0;
+    line-height: 0;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    content: '';
+    display: inline-block;
+    margin-top: 30px
+}
+
+.b-newest_slider .cntrl.next {
+    right: 20px
+}
+
+.b-newest_slider .cntrl.next:before {
+    border-right: none;
+    border-left-color: #fff;
+    float: left;
+    margin-left: 9px
+}
+
+.b-newest_slider .cntrl.prev {
+    left: 20px
+}
+
+.b-newest_slider .cntrl.prev:before {
+    border-left: none;
+    border-right-color: #fff;
+    float: right;
+    margin-right: 9px
+}
+
+.b-newest_slider .cntrl:hover,
+.b-newest_slider .cntrl:focus {
+    background-color: #666;
+    background-color: rgba(0, 0, 0, 0.8)
+}
+
+.b-newest_slider .cntrl:active {
+    background-color: #000
+} */
+
+/* @media (max-width: 530px) {
+    .b-newest_slider .cntrl {
+        top: 110px;
+    }
+} */
+
+.b-newest_slider__wrapper {
+    overflow: hidden;
+    padding-left: 10px;
+    height: 260px;
+}
+
+.b-newest_slider__inner {
+    position: relative;
+    margin-left: -20px;
+    overflow: scroll;
+}
+
+.b-newest_slider__inner:before {
+    background-size: 48px 48px;
+    background-repeat: no-repeat;
+    width: 48px;
+    height: 48px;
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: -24px;
+    left: 50%;
+    margin-left: -24px;
+    animation: spin 1s infinite linear
+}
+
+.b-newest_slider__list {
+    background: #efefef;
+    overflow: scroll;
+    padding-bottom: 20px;
+    width: max-content;
+    position: relative
+}
+
+.b-newest_slider__list.cat-visible .b-content__inline_item .cat {
+    display: block
+}
+
+.b-newest_slider__list.cat-visible .b-content__inline_item .cat .entity {
+    display: none
+}
+
+.b-newest_slider__list .b-content__inline_item {
+    display: block;
+    float: left;
+    margin: 0;
+    margin-left: 11px;;
+    /* margin-right: 10px; */
+    width: 94px
+}
+
+.b-newest_slider__list .b-content__inline_item .info {
+    line-height: 12px
+}
+
+.b-newest_slider__list .b-content__inline_item .play {
+    height: 50px;
+    margin: -25px 0 0 -25px;
+    width: 50px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%
+}
+
+.b-newest_slider__list .b-content__inline_item .play:before {
+    content: '';
+    display: block;
+    background-size: 24px 29px;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 29px;
+    position: absolute;
+    top: 50%;
+    margin-top: -15px;
+    left: 50%;
+    margin-left: -8px;
+    opacity: .7
+}
+
+.b-newest_slider__list .b-content__inline_item .cat {
+    display: none
+}
+
+.b-newest_slider__list .b-content__inline_item .cat .entity {
+    display: none
+}
+
+.b-newest_slider__list .b-content__inline_item .misc {
+    color: #7d7d7d;
+    font-size: 11px;
+    font-weight: normal;
+    padding-top: 5px
+}
+
+.b-newest_slider__list .b-content__inline_item:hover .cat {
+    display: block
+}
+
+.b-newest_slider__list .b-content__inline_item.active .cat {
+    display: block
+}
+
+.b-newest_slider__list .b-content__inline_item-link {
+    padding-top: 10px
+}
+
+.b-newest_slider__list .b-content__inline_item-link a {
+    font-size: 12px
+}
+
+body.b-theme__template__night .b-newest_slider__title {
+    color: #fff
+}
+
+body.b-theme__template__night .b-newest_slider__title span {
+    color: #2e859e;
+    border-color: #2e859e
+}
+
+body.b-theme__template__night .b-newest_slider__title span.active {
+    color: #777
+}
+
+.b-newest_slider__list .b-content__inline_item-link {
+    padding-top: 10px
+}
+
+.b-newest_slider__list .b-content__inline_item-link a {
+    font-size: 12px
+}
+
+.b-content__inline_item.active .b-content__inline_item-link a,
+.b-content__inline_item:hover .b-content__inline_item-link a {
+    text-decoration: underline
+}
+
+.b-content__inline_item-link {
+    padding: 15px 1px 0
+}
+
+.b-content__inline_item-link a {
+    font-size: 14px
+}
+
+.b-sidelist.mixed .b-content__inline_item-link {
+    text-align: center
+}
+
+.b-newest_slider__list .b-content__inline_item .misc {
+    color: #7d7d7d;
+    font-size: 11px;
+    font-weight: normal;
+    padding-top: 5px
+}
+
+body.b-theme__template__night a {
+    color: #2e859e
+}
+
+body.b-theme__template__night a:visited {
+    color: #2e859e
+}
+
+.b-sidelist.mixed .b-content__inline_item-cover {
+    margin: 0 auto;
+    width: 100px
+}
+
+.b-completed__watch__list_item .b-content__inline_item.active .b-content__inline_item-cover img,
+.b-completed__watch__list_item .b-content__inline_item:hover .b-content__inline_item-cover img {
+    filter: alpha(opacity=100);
+    opacity: 1
+}
+
+body.b-theme__template__night .b-content__inline_item-cover {
+    background: #222d33;
+    border-color: rgba(255, 255, 255, 0.25)
+}
+
+.b-content__inline_item.active .b-content__inline_item-cover img,
+.b-content__inline_item:hover .b-content__inline_item-cover img {
+    filter: alpha(opacity=70);
+    opacity: .7
+}
+
+.b-content__inline_item-cover {
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 2px;
+    position: relative;
+    height: 100% /*160px*/
+}
+
+.b-content__inline_item-cover a,
+.b-content__inline_item-cover .layer {
+    display: block;
+    margin-bottom: -9px
+}
+
+.b-content__inline_item-cover .layer {
+    overflow: hidden;
+    position: relative
+}
+
+.b-content__inline_item-cover img {
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    opacity: 1;
+    filter: alpha(opacity=100);
+    width: 88px
+}
+
+.b-content__inline_item-cover.wait img {
+    opacity: 0.2;
+    filter: alpha(opacity=20)
+}
+
+body.b-theme__template__night .b-content__inline_item .info {
+    border-radius: 0 3px 0 0;
+    background: #222d33;
+    color: rgba(255, 255, 255, 0.8)
+}
+
+.b-content__inline_item .info {
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -o-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #fff;
+    color: #777;
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 6px;
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    white-space: nowrap
+}
+</style>
+
+<div class="content">
+    <div class="b-newest_slider_wrapper">
+        <div id="newest-slider" class="b-newest_slider">
+            <div class="b-newest_slider__title">Новые <a href="/<%- page.urls.type %>/<%- page.urls.types.movie %>"><span>фильмы</span></a>, <a href="/<%- page.urls.type %>/<%- page.urls.types.serial %>"><span>сериалы</span></a>, <a href="/<%- page.urls.type %>/<%- page.urls.types.mult %>"><span>мультфильмы</span></a> и <a href="/<%- page.urls.type %>/<%- page.urls.types.anime %>"><span>аниме</span></a> <small class="show-all">(<span>отобразить все новинки</span>)</small></div>
+            <div class="b-newest_slider__wrapper">
+                <div id="newest-slider-holder" class="b-newest_slider__inner">
+                    <div id="newest-slider-content" class="b-newest_slider__list cat-visible" style="transition: transform 0.6s">
+
+                      <% /* Слайдер с фильмами */ %>
+                      <% if (typeof slider === 'object' && slider.length) { %>
+                          <% slider.forEach(function (movie) { %>
+                              <div class="b-content__inline_item" data-id="" data-url="<%- movie.url %>">
+                                  <div class="b-content__inline_item-cover">
+                                      <a href="<%- movie.url %>" title="<%- movie.title %>" aria-label="<%- movie.title %>">
+                                          <img class="lazy" loading="lazy" src="<%- movie.poster_min %>" data-src="<%- movie.poster %>" data-cinemapress-src="<%- movie.poster %>" data-cinemapress-bg-src="<%- movie.poster %>" data-cinemapress-poster="<%- movie.poster %>" width="110" height="100%" alt="Смотреть <%- movie.title %> на хдрезка онлайн в HD качестве 720p">
+
+                                          <% if (movie.custom.end === 1) { %>
+                                          <span class="info">Завершен (все серии)</span>
+                                          <% } else if (movie.custom.last_season && movie.custom.last_episode) { %>
+                                          <span class="info"><%- movie.custom.last_season %> сезон<br><%- movie.custom.last_episode %> серия</span>
+                                          <% } %>
+                                      </a>
+                                  </div>
+                                  <div class="b-content__inline_item-link"> <a href="<%- movie.url %>"><%- movie.title %></a>
+                                      <div class="misc"><%- movie.year %>, <%- movie.country %>, <%- movie.genre %></div>
+                                  </div>
+                              </div>
+
+                          <% }); %>
+                      <% } %>
+
+                    </div>
+                </div>
+            </div>
+            <!-- <span class="cntrl prev" data-to="prev"></span> -->
+            <!-- <span class="cntrl next" data-to="next"></span> -->
+        </div>
+    </div>
+</div>
+
+<!--<script>
+
+    let sliderMargin = 0;
+    let sliderClick = 0;
+    const sliderLength = '<%- slider.length %>' - 3;
+
+    const nextButton = document.querySelector('.b-newest_slider .next');
+
+    nextButton.addEventListener('click', eventNext => {
+        if(sliderClick <= sliderLength) {
+            sliderClick++;
+            sliderMargin -= 127;
+        } else if (sliderClick >= sliderLength) {
+            sliderClick = 0;
+            sliderMargin = 0;
+        }
+        document.querySelector('.b-newest_slider__list').style.transform = 'translate(' + (sliderMargin) + 'px)';
+    });
+
+    const prevButton = document.querySelector('.b-newest_slider .prev');
+
+    prevButton.addEventListener('click', eventPrev => {
+        if(sliderClick > 0) {
+            sliderClick--;
+            sliderMargin += 127;
+        } else if (sliderClick <= 0) {
+            sliderClick = sliderLength+1;
+            sliderMargin = -Math.abs(((sliderLength+1) * 127));
+        }
+        document.querySelector('.b-newest_slider__list').style.transform = 'translate(' + (sliderMargin) + 'px)';
+    });
+
+</script>-->
+
+<% if (typeof news === 'object' && news.length) { %>
+<div class="content">
+    <div class="clear"></div>
+    <% news.forEach(function (content) { %>
+        <link rel="prefetch prerender" as="image" href="<%- content.image %>">
+        <link rel="preload" href="<%- content.image %>" as="image" type="image/webp">
+        <div class="cinemapress-news-block">
+            <div style="margin: 0; padding: 10px">
+                <a href="<%- content.url %>" class="cinemapress-news lazy" loading="lazy" style="background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAADICAQAAABrVzQQAAABLUlEQVR42u3RMQEAAAgDoC251W3hI1SgmfBMpUtHOtKRjnSkIx3pSEc60pGOdKQjHelIl450pCMd6UhHOtKRjnSkIx3pSEc60pEuHelIRzrSkY50pCMd6UhHOtKRjnSkI1060pGOdKQjHelIRzrSkY50pCMd6UhHunSkIx3pSEc60pGOdKQjHelIRzrSkY506dKlIx3pSEc60pGOdKQjHelIRzrSkY50pEtHOtKRjnSkIx3pSEc60pGOdKQjHelIl450pCMd6UhHOtKRjnSkIx3pSEc60pEuHelIRzrSkY50pCMd6UhHOtKRjnSkI1060pGOdKQjHelIRzrSkY50pCMd6UhHunTp0pGOdKQjHelIRzrSkY50pCMd6UhHOtKlIx3pSEc60pGOdKRzawFrr2QBa00SvgAAAABJRU5ErkJggg==');" data-bg="<%- content.image %>">
+                    <div class="cinemapress-news-title">
+                        <%= content.title %>
+                    </div>
+                </a>
+            </div>
+        </div>
+    <% }); %>
+    <div class="clear"></div>
+</div>
+<% } %>
+
+<% if (typeof index === 'object') { %>
+<div class="content">
+      <% for (var type in index) {
+          if (index.hasOwnProperty(type) && index[type].length && type === 'episode') {
+          index[type].forEach(function (category) { %>
 
     <% if (typeof category === 'object' && category.movies && category.movies.length) { %>
         <div class="info block">
@@ -39,12 +543,22 @@ index[type].forEach(function (category) { %>
         </div>
     <% } %>
 
-<% }); } } } %>
+<% }); } } %>
+</div>
+<% } %>
 
-<% if (typeof index === 'object') {
-        for (var type in index) {
-if (index.hasOwnProperty(type) && index[type].length && type !== 'episode') {
-index[type].forEach(function (category) { %>
+<% if (typeof page.adv === 'object' && page.adv.top) { %>
+    <div style="text-align: center; margin: 10px auto;">
+        <%- page.adv.top %>
+    </div>
+    <div class="clear"></div>
+<% } %>
+
+<% if (typeof index === 'object') { %>
+<div class="content">
+    <% for (var type in index) {
+        if (index.hasOwnProperty(type) && index[type].length && type !== 'episode') {
+        index[type].forEach(function (category) { %>
 
     <h2>
         <%- category.name %>
@@ -54,7 +568,7 @@ index[type].forEach(function (category) { %>
                  class="cinemapress-random-index"
                  onclick="window.location.href='<%- (category.url && category.url.indexOf('?') + 1 ? category.url + '&random=' : category.url + '?random=') %><%- Math.random() %>'"
                  title="<%= page.l.random %>">
-                <img src="/themes/default/public/mobile/dice.svg" alt="<%= page.l.random %>">
+                <img class="lazy" loading="lazy" src="/themes/default/public/mobile/dice.svg" alt="<%= page.l.random %>">
             </div>
         </div>
     </h2>
@@ -64,90 +578,93 @@ index[type].forEach(function (category) { %>
 
         <div class="clear"></div>
 
-        <div class="poster">
-            <a href="<%- movie.url %>">
-                <img src="<%- movie.poster_min %>" alt="<%= movie.title %> (<%- movie.year %>)"
-                     title="<%= movie.title %> (<%- movie.year %>)">
-            </a>
-        </div>
-        <h3><a href="<%- movie.url %>"><%= movie.title %></a></h3>
-
-        <% if (movie.year_url) { %>
-
-            <div class="info">
-                <%- page.l.year %>: <%- movie.year_url %>
+        <div>
+            <div class="poster">
+                <a href="<%- movie.url %>">
+                    <img class="lazy" loading="lazy" src="<%- movie.poster_min %>" data-src="<%- movie.poster %>" data-cinemapress-src="<%- movie.poster %>" data-cinemapress-bg-src="<%- movie.poster %>" data-cinemapress-poster="<%- movie.poster %>" alt="<%= movie.title %> (<%- movie.year %>)"
+                         title="<%= movie.title %> (<%- movie.year %>)">
+                </a>
             </div>
+            <h3><a href="<%- movie.url %>"><%= movie.title %></a></h3>
 
-        <% } %>
-        <% if (movie.countries_url) { %>
+            <% if (movie.year_url) { %>
 
-            <div class="info">
-                <%- page.l.countries %>: <%- movie.countries_url %>
-            </div>
+                <div class="info">
+                    <%- page.l.year %>: <%- movie.year_url %>
+                </div>
 
-        <% } %>
-        <% if (movie.genres_url) { %>
+            <% } %>
+            <% if (movie.countries_url) { %>
 
-            <div class="info">
-                <%- page.l.genres %>: <%- movie.genres_url %>
-            </div>
+                <div class="info">
+                    <%- page.l.countries %>: <%- movie.countries_url %>
+                </div>
 
-        <% } %>
+            <% } %>
+            <% if (movie.genres_url) { %>
 
-        <div class="clear"></div>
+                <div class="info">
+                    <%- page.l.genres %>: <%- movie.genres_url %>
+                </div>
 
-        <% if (movie.kp_vote) { %>
-            <div class="info">
-                <div class="logo-kp"></div>
-                <span style="color:#F56504; font-weight: 800; font-size: 18px;">&nbsp;<%- movie.kp_rating / 10 %>&nbsp;</span>
-                <% for (var kp = 10; kp >= 1; kp--) {
-                    var star_kp = (Math.round(movie.kp_rating / 10) >= kp)
-                            ? '<div class="star-true star-true-kp"></div>'
-                            : '<div class="star-false star-false-kp"></div>'; %>
-                <%- star_kp %>
-                <% } %>
-            </div>
-        <% } %>
+            <% } %>
 
-        <% if (movie.imdb_vote) { %>
-            <div class="info">
-                <div class="logo-imdb"></div>
-                <span style="color:#E3B71E; font-weight: 800; font-size: 18px;">&nbsp;<%- movie.imdb_rating / 10 %>&nbsp;</span>
-                <% for (var imdb = 10; imdb >= 1; imdb--) {
-                    var star_imdb = (Math.round(movie.imdb_rating / 10) >= imdb)
-                            ? '<div class="star-true star-true-imdb"></div>'
-                            : '<div class="star-false star-false-imdb"></div>'; %>
-                <%- star_imdb %>
-                <% } %>
-            </div>
-        <% } %>
+            <% if (movie.quality) { %>
 
-        <div class="clear"></div>
+                <div class="info" style="line-height: 2;">
+                    <%- page.l.quality %>: <%- movie.quality %>
+                </div>
 
-        <% if (movie.quality) { %>
+            <% } %>
+            <% if (movie.translate) { %>
 
-            <div class="info" style="line-height: 2;">
-                <%- page.l.quality %>: <%- movie.quality %>
-            </div>
+                <div class="info" style="line-height: 2;">
+                    <%- page.l.translate %>: <%- movie.translate %>
+                </div>
 
-        <% } %>
-        <% if (movie.translate) { %>
+            <% } %>
 
-            <div class="info" style="line-height: 2;">
-                <%- page.l.translate %>: <%- movie.translate %>
-            </div>
+            <div class="clear"></div>
 
-        <% } %>
+            <% if (movie.kp_vote) { %>
+                <div class="info">
+                    <div class="logo-kp"></div>
+                    <span style="color:#F56504; font-weight: 800; font-size: 18px;">&nbsp;<%- movie.kp_rating / 10 %>&nbsp;</span>
+                    <% for (var kp = 10; kp >= 1; kp--) {
+                        var star_kp = (Math.round(movie.kp_rating / 10) >= kp)
+                                ? '<div class="star-true star-true-kp"></div>'
+                                : '<div class="star-false star-false-kp"></div>'; %>
+                    <%- star_kp %>
+                    <% } %>
+                </div>
+            <% } %>
 
-        <% if (movie.description_short) { %>
+            <% if (movie.imdb_vote) { %>
+                <div class="info">
+                    <div class="logo-imdb"></div>
+                    <span style="color:#E3B71E; font-weight: 800; font-size: 18px;">&nbsp;<%- movie.imdb_rating / 10 %>&nbsp;</span>
+                    <% for (var imdb = 10; imdb >= 1; imdb--) {
+                        var star_imdb = (Math.round(movie.imdb_rating / 10) >= imdb)
+                                ? '<div class="star-true star-true-imdb"></div>'
+                                : '<div class="star-false star-false-imdb"></div>'; %>
+                    <%- star_imdb %>
+                    <% } %>
+                </div>
+            <% } %>
 
-            <div class="description">
-                <%- movie.description_short %>...
-            </div>
+            <% if (movie.description_short) { %>
 
-<% } }); } }); } } } %>
+                <div class="description">
+                    <%- movie.description_short %>...
+                </div>
 
+    <% } %>
+    </div>
+  <% }); } }); } } %>
+</div>
+<% } %>
 <% if (typeof page.pagination === 'object') { %>
+<div class="content">
     <div class="info block pagination">
         <% if (page.pagination.first) { %><a href="<%- page.pagination.first.link %>"
                                              rel="nofollow"><%- page.pagination.first.number %></a><span class="dots">...</span>
@@ -164,6 +681,17 @@ index[type].forEach(function (category) { %>
                                                                          rel="nofollow"><%- page.pagination.last.number %></a>
         <% } %>
     </div>
+</div>
 <% } %>
 
+<h1 style="font-size: 1.5em; text-align: center">Смотреть фильмы в HD онлайн</h1>
+<div class="description" style="">
+  <p>Добро пожаловать на главную страницу киносайта HDrezka! У нас вы можете смотреть бесплатно лучшие фильмы и сериалы в HD качестве онлайн. На нашем сайте представлен огромный выбор контента для всех любителей кино - от новинок голливудского кино до культовых классик. Мы постоянно обновляем нашу библиотеку, чтобы вы могли насладиться просмотром самых свежих релизов.</p>
+  <div class="clear"></div>
+  <p>У нас вы найдете разнообразные жанры: драмы, комедии, боевики, ужасы, фантастика и многое другое. Вам больше не нужно искать нужный фильм по всему интернету - просто зайдите на HDrezka и выберите то, что хотите посмотреть прямо сейчас! Наш удобный поиск поможет вам быстро найти интересующий вас контент.</p>
+  <div class="clear"></div>
+  <p>Мы уделяем особое внимание качеству видео и звука, чтобы ваше онлайн-киносмотрение было максимально приятным. На HDrezka вы сможете насладиться кинотеатральным опытом не выходя из дома.</p>
+  <div class="clear"></div>
+  <p>Не упустите возможность окунуться в мир кино без регистрации и совершенно бесплатно! Приготовьтесь к увлекательному путешествию по миру кино с HDrezka!</p>
+</div>
 <%- include('includes/footer.ejs'); -%>

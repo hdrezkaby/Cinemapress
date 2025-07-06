@@ -36,7 +36,7 @@ h1,
 h2 {
   margin: 0 auto;
   padding: 10px;
-  background: url('/themes/default/public/mobile/light/img/bg2.png') #333;
+  background: url('/themes/default/public/mobile/light/img/bg5.png') #333;
   color: #fff;
   line-height: 2;
 }
@@ -72,10 +72,10 @@ a:hover {
 }
 .logo {
   margin: 10px 0 10px 10px;
-  width: 70px;
+  width: 190px;
   height: 70px;
-  border-radius: 100%;
-  background: url('/themes/default/public/mobile/light/img/bg2.png') #333;
+  /* border-radius: 5%; */
+  /* background: url('/themes/default/public/mobile/light/img/bg5.png') #333; */
 }
 .info {
   margin: 10px;
@@ -109,7 +109,7 @@ form {
   background: #fff;
 }
 .block {
-  background: url('/themes/default/public/mobile/light/img/bg6.png') top center
+  background: url('/themes/default/public/mobile/light/img/bg6.webp') top center
     #ccc;
   border: 2px solid #f1f1f1;
   border-radius: 5px;
@@ -469,7 +469,7 @@ form {
 .cinemapress-random-category {
   position: relative;
   text-align: left;
-  background: url('/themes/default/public/mobile/light/img/bg2.png') #333;
+  background: url('/themes/default/public/mobile/light/img/bg5.png') #333;
   border-radius: 5px;
   margin: 15px 10px 15px 70px;
   border: 2px #ccc solid;

@@ -3,57 +3,175 @@
 <% } %>
 
 <div class="content">
+    <div id="top-head" class="b-tophead_wrapper fixed">
+        <div class="b-tophead b-wrapper">
+            <div class="b-tophead-left pull-left">
+                <a title="На главную" class="b-tophead__logo" href="/">
+                    <i class="i-sprt"></i>
+                    <div class="b-tophead__holiday_icon"></div>
+                </a>
+                <div class="b-tophead__subscribe-dropdown pull-left" onmouseover="document.querySelector('.b-tophead__subscribe-dropdown-inner').classList.add('hovered');
+                      document.querySelector('.b-tophead__subscribe-dropdown-list').style.display = 'block';" onmouseout="document.querySelector('.b-tophead__subscribe-dropdown-inner').classList.remove('hovered');
+                      document.querySelector('.b-tophead__subscribe-dropdown-list').style.display = 'none';">
+                    <button class="b-tophead__subscribe-dropdown-inner">
+                        Подпишись
+                    </button>
+                    <ul class="b-tophead__subscribe-dropdown-list" style="display: none;">
+                        <li><a href="https://t.me/hdrezkaby" class="b-tophead__subscribe-dropdown-list-item tg" rel="nofollow" target="_blank">Telegram</a></li>
+                        <li><a href="https://vk.com/hdrezkaby" class="b-tophead__subscribe-dropdown-list-item vk" target="_blank">ВКонтакте</a></li>
+                        <li><a href="https://instagram.com/hdrezka.by" class="b-tophead__subscribe-dropdown-list-item instagram" target="_blank">Instagram</a></li>
+                        <li><a href="https://facebook.com/hdrezka.by" class="b-tophead__subscribe-dropdown-list-item fb" target="_blank">facebook</a></li>
+                        <li><a href="https://twitter.com/HdrezkaB" class="b-tophead__subscribe-dropdown-list-item tw" target="_blank">Твиттер</a></li>
+                    </ul>
+                </div>
+                <div class="pull-left">
+                    <div class="b-theme__switcher" onclick="
+                        document.body.classList.toggle('b-theme__template__night');
+                        if (localStorage.getItem('nightMode') != 'true') {
+                            localStorage.setItem('nightMode', 'true');
+                            includeDarkCSS();
+                        } else {
+                            localStorage.setItem('nightMode', 'false');
+                        }">
+                        <div class="tumbler__wrapper">
+                            <div class="tumbler"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="b-tophead-right pull-right">
+                <span style="display: inline-block">
+                    <span class="continueViewingBlock" style="display: block;">
+                        <a href="#" id="continueViewing" class="ui button secondary">Продолжить?</a>
+                    </span>
+                </span>
 
-<a href="<%- page.protocol %><%- page.domain %>/">
-    <img src="/themes/default/public/mobile/logo.svg?v=<%- page.ver %>" class="logo" alt="Logo">
-</a>
+                <span class="randomMovieMenu" style="display:none">
+                    <a href="/?random=0.9203913968039124" class="cinemapress-random-menu ui button secondary hidden-xs">Мне повезет!</a>
+                </span>
 
-<div class="info continueViewingBlock" style="float: right; display: none">
-    <a href="javascript:void(0)" id="continueViewing"><%- page.l.continue %>&nbsp;►</a>
-</div>
-
-<div class="randomMovieMenu">
-    <div class="info cinemapress-random-menu">
-        <a href="<%- page.protocol %><%- page.domain %>/?random=<%- Math.random() %>"><%- page.l.lucky %>&nbsp;⚀</a>
+                <input type="hidden" id="member_user_id" name="member_user_id" value="0">
+                <input type="hidden" id="member_user_token" name="member_user_token" value="1541769c9e2a6aeaa36a66ddefba9b96">
+            </div>
+        </div>
     </div>
-</div>
+    <!-- <div id="top-head" class="b-tophead_wrapper fixed">
+        <div class="b-tophead b-wrapper">
+            <div class="b-tophead-left pull-left">
+                <a title="На главную" class="b-tophead__logo" href="/"><i class="i-sprt"></i></a>
+                <div class="b-tophead__holiday_icon"></div>
+            </div>
+        </div>
+    </div> -->
 
-<div class="clear"></div>
+    <!-- <div class="clear"></div> -->
 
-<form action="<%- page.protocol %><%- page.domain %>/<%- page.urls.search %>" method="get">
-    <input class="submit" value="<%- page.l.menu %>" type="button" style="left: 10px; right: auto" onclick="openNav()">
-    <input type="text" class="text" name="q" value="" placeholder="<%- page.l.movieTitle %> ..."
-           data-autocomplete="desktop">
-    <input type="submit" class="submit" value="<%- page.l.search %>">
-    <div class="cinemapress-autocomplete" data-autocomplete="desktop"></div>
-</form>
+    <form action="<%- page.protocol %><%- page.domain %>/<%- page.urls.search %>" method="get">
+        <input class="submit" value="<%- page.l.menu %>" type="button" style="left: 10px; right: auto" onclick="openNav()">
+        <input type="text" class="text" name="q" value="" placeholder="<%- page.l.movieTitle %> ..."
+               data-autocomplete="desktop">
+        <input type="submit" class="submit" value="<%- page.l.search %>">
+        <div class="cinemapress-autocomplete" data-autocomplete="desktop"></div>
+    </form>
 
-<div id="menuSidenav" class="sidenav">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.genre %>"><%- page.l.genres %></a>
-    <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.year %>"><%- page.l.years %></a>
-    <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.country %>"><%- page.l.countries %></a>
-    <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.actor %>"><%- page.l.actors %></a>
-    <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.director %>"><%- page.l.directors %></a>
-    <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.content %>?tag=<%- page.l.collections %>"><%- page.l.collections %></a>
-    <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.content %>?tag=<%- page.l.news %>"><%- page.l.news %></a>
-</div>
-
-<script>
-  function openNav() {
-    document.getElementById('menuSidenav').style.width = '100%';
-  }
-
-  function closeNav() {
-    document.getElementById('menuSidenav').style.width = '0';
-  }
-</script>
-
-<div class="clear"></div>
-
-<% if (typeof page.adv === 'object' && page.adv.top) { %>
-    <div style="text-align: center; margin: 10px auto;">
-        <%- page.adv.top %>
+    <div id="menuSidenav" class="sidenav">
+        <a href="#" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.type %>/<%- page.urls.types.movie %>"><%- page.l.movies %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.type %>/<%- page.urls.types.serial %>"><%- page.l.series %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.type %>/<%- page.urls.types.anime %>"><%- page.l.anime %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.type %>/<%- page.urls.types.mult %>"><%- page.l.cartoons %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.type %>/<%- page.urls.types.multserial %>"><%- page.l.animated %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.type %>/<%- page.urls.types.tv %>"><%- page.l.tv %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.genre %>"><%- page.l.genres %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.year %>"><%- page.l.years %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.country %>"><%- page.l.countries %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.actor %>"><%- page.l.actors %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.director %>"><%- page.l.directors %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.content %>?tag=<%- page.l.collections %>"><%- page.l.collections %></a>
+        <a href="<%- page.protocol %><%- page.domain %>/<%- page.urls.content %>?tag=<%- page.l.news %>"><%- page.l.news %></a>
     </div>
-    <div class="clear"></div>
-<% } %>
+
+    <script>
+      function openNav() {
+        document.getElementById('menuSidenav').style.width = '100%';
+      }
+
+      function closeNav() {
+        document.getElementById('menuSidenav').style.width = '0';
+      }
+    </script>
+
+    <!-- <div class="clear"></div> -->
+
+    <script>
+
+        // document.body.classList.add("has-brand", "pp", "fixed-header");
+
+        if (localStorage.getItem('nightMode') === 'true') {
+            document.body.classList.add('b-theme__template__night');
+            includeDarkCSS();
+        } else {
+            document.body.classList.remove('b-theme__template__night');
+        }
+
+        let date = new Date();
+        let day = date.getDate();
+        let month = date.getMonth()+1;
+        let year = date.getFullYear();
+
+        console.log(day + '.' + month + '.' + year);
+
+        function includeHolidayCSS() {
+            var cssId = 'myCss';  // you could encode the css path itself to generate id..
+            if (!document.getElementById(cssId))
+            {
+                var head  = document.getElementsByTagName('head')[0];
+                var link  = document.createElement('link');
+                link.id   = cssId;
+                link.rel  = 'stylesheet';
+                link.type = 'text/css';
+                link.href = '/themes/default/public/mobile/custom/css/holidays.mobile.css';
+                link.media = 'all';
+                head.appendChild(link);
+            }
+        }
+
+        if(day == 14 && month == 2) includeHolidayCSS(), document.body.classList.add("b-holiday__valentine");
+        else if(day == 23 && month == 2) includeHolidayCSS(), document.body.classList.add("b-holiday__23feb");
+        else if(day == 8 && month == 3) includeHolidayCSS(), document.body.classList.add("b-holiday__womensday");
+        else if(day == 1 && month == 4) includeHolidayCSS(), document.body.classList.add("b-holiday__foolsday");
+        else if(day == 22 && month == 4) includeHolidayCSS(), document.body.classList.add("b-holiday__earthday");
+        else if(day == 24 && month == 4) includeHolidayCSS(), document.body.classList.add("b-holiday__easter");
+        else if(day == 29 && month == 4) includeHolidayCSS(), document.body.classList.add("b-holiday__danceday");
+        else if(day == 1 && month == 5) includeHolidayCSS(), document.body.classList.add("b-holiday__workersday");
+        else if(day == 7 && month == 5) includeHolidayCSS(), document.body.classList.add("b-holiday__radioday");
+        else if(day == 29 && month == 4) includeHolidayCSS(), document.body.classList.add("b-holiday__astronomy"); // каждый год по разному
+        else if(day == 9 && month == 5) includeHolidayCSS(), document.body.classList.add("b-holiday__victoryww2");
+        else if(day == 12 && month == 5) includeHolidayCSS(), document.body.classList.add("b-holiday__nurseday");
+        else if(day == 15 && month == 5) includeHolidayCSS(), document.body.classList.add("b-holiday__familyday");
+        else if(day == 18 && month == 5) includeHolidayCSS(), document.body.classList.add("b-holiday__museumday");
+        else if(day == 1 && month == 6) includeHolidayCSS(), document.body.classList.add("b-holiday__children");
+        else if(day == 5 && month == 6) includeHolidayCSS(), document.body.classList.add("b-holiday__environment");
+        else if(day == 6 && month == 7) includeHolidayCSS(), document.body.classList.add("b-holiday__kissday");
+        else if(day == 7 && month == 7) includeHolidayCSS(), document.body.classList.add("b-holiday__kupalanight");
+        else if(day == 8 && month == 8) includeHolidayCSS(), document.body.classList.add("b-holiday__mountaineeringday");
+        else if(day == 1 && month == 9) includeHolidayCSS(), document.body.classList.add("b-holiday__knowledgeday");
+        else if(day == 31 && month == 10) includeHolidayCSS(), document.body.classList.add("b-holiday__halloweenday");
+        else if (month == 12 || month == 1 || month == 2) includeHolidayCSS(), document.body.classList.add("b-christmas");
+
+        function includeDarkCSS() {
+            var cssId = 'myCss';  // you could encode the css path itself to generate id..
+            if (!document.getElementById(cssId))
+            {
+                var head  = document.getElementsByTagName('head')[0];
+                var link  = document.createElement('link');
+                link.id   = cssId;
+                link.rel  = 'stylesheet';
+                link.type = 'text/css';
+                link.href = '/themes/default/public/mobile/custom/css/dark.mobile.css';
+                link.media = 'all';
+                head.appendChild(link);
+            }
+        }
+
+    </script>

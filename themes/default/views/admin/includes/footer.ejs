@@ -63,6 +63,11 @@
     if (movies_saved)
       movies_saved.addEventListener('click', saveData);
 
+    var rewrite = document.querySelectorAll('.rewrite-btn2');
+    if (rewrite)
+      for (i = 0; i < rewrite.length; i++)
+        rewrite[i].addEventListener('click', rewriteData);
+
     var del = document.querySelectorAll('.del');
     if (del)
       for (i = 0; i < del.length; i++)
@@ -317,6 +322,31 @@
       self.innerHTML = '<span class="fa fa-check"></span>';
       alert('Restart page 2 times.');
     }, 10000);
+
+  }
+
+  function rewriteData() {
+
+    var self = this;
+    self.removeEventListener('click', rewriteData);
+    self.innerHTML = '<span class="fa fa-spinner fa-spin"></span>';
+
+    var data = {};
+    // data.delete = true;
+    // data[self.dataset.type] = {};
+    // if (self.dataset.type === 'collection') {
+    //   data[self.dataset.type].url = self.dataset.id;
+    // } else {
+    //   data[self.dataset.type].id = self.dataset.id;
+    // }
+
+    sendServer(data, function(err, result) {
+      if (err) {
+        self.innerHTML = '<span class="fa fa-bug"></span>&nbsp;&nbsp;' + err;
+      } else {
+        self.innerHTML = '<span class="fa fa-check text-success"></span>';
+      }
+    });
 
   }
 

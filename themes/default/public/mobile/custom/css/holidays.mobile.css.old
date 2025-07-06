@@ -1,0 +1,901 @@
+
+
+body.b-theme__template__night.b-christmas {
+    background: #000 url(/themes/hdrezka/public/images/holiday-christmas-bg-night.png) !important
+}
+
+body.b-theme__template__night.b-christmas .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-christmas-logo-night.gif) no-repeat 0 0;
+    background-size: 100% 200%
+}
+
+body.b-theme__template__night.b-christmas .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+body.b-theme__template__night.b-christmas .b-tophead_wrapper {
+    background: #0d0d0d
+}
+
+body.b-theme__template__night.b-holiday__valentine {
+    background: #02050e url(/themes/hdrezka/public/images/holiday-valentine-bg.png) !important;
+    background-size: 512px 665px !important
+}
+
+body.b-theme__template__night.b-holiday__valentine .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-valentine-logo-night.gif) no-repeat 0 0;
+    background-size: 100% 200%
+}
+
+body.b-theme__template__night.b-holiday__valentine .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+body.b-theme__template__night.b-holiday__valentine .b-tophead_wrapper {
+    background: #121212
+}
+
+body.b-theme__template__night.b-holiday__womensday .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-womensday-logo-night.gif) no-repeat 0 0;
+    background-size: 100% 200%;
+    top: 0
+}
+
+body.b-theme__template__night.b-holiday__womensday .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+body.b-theme__template__night.b-holiday__womensday #top-head {
+    background: #4a3a51
+}
+
+body.b-theme__template__night.b-holiday__womensday .b-tophead-dropdown,
+body.b-theme__template__night.b-holiday__womensday .b-tophead-right a,
+body.b-theme__template__night.b-holiday__womensday .b-tophead__rss-link,
+body.b-theme__template__night.b-holiday__womensday .b-tophead__subscribe-dropdown-inner {
+    color: rgba(255, 255, 255, 0.6)
+}
+
+body.b-theme__template__night.b-holiday__womensday .user-things a .count {
+    color: #fff
+}
+
+body.b-theme__template__night.b-holiday__womensday .user-things a:hover .count {
+    color: #bfbfbf
+}
+
+body.b-theme__template__night.b-holiday__foolsday .b-tophead_wrapper {
+    background: #313131
+}
+
+.b-tophead__holiday_icon {
+    display: none
+}
+
+.b-tophead__holiday_icon:after {
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    background-image: -moz-linear-gradient(top, #e4e4e4, #f7f7f7);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #e4e4e4), color-stop(1, #f7f7f7));
+    background-image: -webkit-linear-gradient(top, #e4e4e4, #f7f7f7);
+    background-image: -moz-linear-gradient(top, #e4e4e4, #f7f7f7);
+    background-image: -ms-linear-gradient(top, #e4e4e4, #f7f7f7);
+    background-image: -o-linear-gradient(top, #e4e4e4, #f7f7f7);
+    color: #000;
+    content: "";
+    display: none;
+    font-family: Arial, Helvetica, Tahoma, sans-serif;
+    font-size: 13px;
+    padding: 8px 12px;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    text-transform: none;
+    white-space: nowrap;
+    z-index: 20
+}
+
+body.b-theme__template__night.b-christmas .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-christmas-logo-night.gif) no-repeat 0 0;
+    background-size: 100% 200%
+}
+
+body.b-theme__template__night.b-christmas .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+body.b-theme__template__night.b-christmas .b-tophead_wrapper {
+    background: #0d0d0d
+}
+
+.b-christmas {
+    background: #efefef url(/themes/hdrezka/public/images/holiday-christmas-bg.png) !important
+}
+
+.b-christmas .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-christmas-logo.gif) no-repeat 0 0;
+    background-size: 100% 200%;
+    padding: 0;
+    top: 0;
+    margin-left: -146px;
+    height: 40px;
+    width: 291px;
+}
+
+.b-christmas .b-collections__newest {
+    background-image: url(/themes/hdrezka/public/images/holiday-christmas-bg-collections.png)
+}
+
+.b-holiday__valentine {
+    background: #efefef url(/themes/hdrezka/public/images/holiday-valentine-bg.png) !important;
+    background-size: 512px 665px !important
+}
+
+.b-holiday__valentine .b-tophead__logo {
+  background: url(/themes/hdrezka/public/images/holiday-valentine-logo.gif) no-repeat 0 0;
+    background-size: 100% 200%;
+    padding: 0;
+    top: 0;
+    margin-left: -200px;
+    height: 40px;
+    width: 431px;
+}
+
+.b-holiday__valentine .b-tophead__logo .i-sprt {
+    display: none
+}
+
+.b-holiday__valentine .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+.b-holiday__valentine .b-tophead__logo:after {
+    top: 4px;
+    left: 100px
+}
+
+.b-holiday__valentine .b-tophead__logo:hover:after {
+    content: "День всех влюблённых!";
+    display: block
+}
+
+.b-holiday__23feb .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-23feb-logo.png) no-repeat 0 0;
+    background-size: 100% 200%;
+    padding: 0;
+    top: 0;
+    margin-left: -204px;
+    height: 40px;
+    width: 407px;
+}
+
+.b-holiday__23feb .b-tophead__logo .i-sprt {
+    display: none
+}
+
+.b-holiday__23feb .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+.b-holiday__23feb .b-tophead__logo:after {
+    top: 4px;
+    left: 105px
+}
+
+.b-holiday__23feb .b-tophead__logo:hover:after {
+    content: "День защитника Отечества!";
+    display: block
+}
+
+.b-holiday__23feb .b-tophead_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-23feb-header-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 0;
+    background-size: 502px 40px !important
+}
+
+.b-holiday__23feb .user-things-notifications {
+    display: none
+}
+
+.b-holiday__23feb .b-tophead-dropdown,
+.b-holiday__23feb .b-tophead-right a {
+    color: #aaa
+}
+
+.b-holiday__23feb .b-tophead-dropdown a {
+    color: #444
+}
+
+.b-holiday__womensday {
+    background: #d9d9d9 url(/themes/hdrezka/public/images/holiday-womensday-bg.jpg) no-repeat 50% 261px !important
+}
+
+.b-holiday__womensday .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-womensday-logo.gif) no-repeat 0 0;
+    background-size: 100% 200%;
+    padding: 0;
+    top: -1px;
+    margin-left: -184px;
+    height: 40px;
+    width: 368px;
+}
+
+.b-holiday__womensday .b-tophead__logo .i-sprt {
+    display: none
+}
+
+.b-holiday__womensday .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+.b-holiday__womensday .b-tophead__logo:after {
+    top: 4px;
+    left: 208px
+}
+
+.b-holiday__womensday .b-tophead__logo:hover:after {
+    content: "Международный женский день!";
+    display: block
+}
+
+.b-holiday__womensday #top-head {
+    background: #ffdef0
+}
+
+.b-holiday__womensday .b-tophead-dropdown,
+.b-holiday__womensday .b-tophead-right a,
+.b-holiday__womensday .b-tophead__rss-link,
+.b-holiday__womensday .b-tophead__subscribe-dropdown-inner {
+    color: #2b3336
+}
+
+.b-holiday__womensday .user-things a .count {
+    color: #000
+}
+
+.b-holiday__womensday .user-things a:hover .count {
+    color: #292929
+}
+
+.b-holiday__womensday .b-tophead-dropdown a {
+    color: #444
+}
+
+.b-holiday__foolsday .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-foolsday-logo.gif) no-repeat 0 0;
+    background-size: 100% 200%;
+    padding: 0;
+    top: 0;
+    margin-left: -175px;
+    height: 40px;
+    width: 350px;
+}
+
+.b-holiday__foolsday .b-tophead__logo .i-sprt {
+    display: none
+}
+
+.b-holiday__foolsday .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+.b-holiday__foolsday .b-tophead__logo:after {
+    top: 4px;
+    left: 46px
+}
+
+.b-holiday__foolsday .b-tophead__logo:hover:after {
+    content: "День смеха!";
+    display: block
+}
+
+.b-holiday__easter .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-easter-logo.gif) no-repeat 0 0;
+    background-size: 100% 200%;
+    padding: 0;
+    top: 0;
+    margin-left: -200px;
+    height: 40px;
+    width: 400px;
+}
+
+.b-holiday__easter .b-tophead__logo .i-sprt {
+    display: none
+}
+
+.b-holiday__easter .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+.b-holiday__easter .b-tophead__logo:after {
+    top: 4px;
+    left: 120px
+}
+
+.b-holiday__easter .b-tophead__logo:hover:after {
+    content: "Христос воскрес!";
+    display: block
+}
+
+.b-holiday__easter #top-head {
+    background: #b6ddbd
+}
+
+.b-holiday__easter .b-tophead-dropdown,
+.b-holiday__easter .b-tophead-right a,
+.b-holiday__easter .b-tophead__rss-link,
+.b-holiday__easter .b-tophead__subscribe-dropdown-inner {
+    color: #444
+}
+
+.b-holiday__easter .user-things a .count {
+    color: #000
+}
+
+.b-holiday__easter .user-things a:hover .count {
+    color: #292929
+}
+
+.b-holiday__easter .b-tophead-dropdown a {
+    color: #444
+}
+
+.b-holiday__earthday .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-earthday-icon.png) no-repeat 0 0;
+    display: block;
+    height: 33px;
+    position: absolute;
+    top: 3px;
+    left: -70px;
+    width: 33px
+}
+
+.b-holiday__earthday .b-tophead__holiday_icon:hover:after {
+    content: "Сохраним Землю!";
+    display: block
+}
+
+.b-holiday__earthday .b-topnav_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-earthday-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%
+}
+
+.b-holiday__earthday.fixed-header .b-topnav_wrapper {
+    background-size: auto 75%
+}
+
+.b-holiday__astronomy .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-astronomy-icon.png) no-repeat 0 0;
+    display: block;
+    height: 36px;
+    position: absolute;
+    top: 2px;
+    left: -70px;
+    width: 64px
+}
+
+.b-holiday__astronomy .b-tophead__holiday_icon:hover:after {
+    content: "Неделька астрономии!";
+    display: block
+}
+
+.b-holiday__astronomy .b-tophead_wrapper {
+    background-color: #040920
+}
+
+.b-holiday__astronomy .b-topnav_wrapper {
+    background-color: #070d2f;
+    background-image: url(/themes/hdrezka/public/images/holiday-astronomy-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%
+}
+
+.b-holiday__astronomy .b-topnav__item-link {
+    color: #fff
+}
+
+.b-holiday__astronomy .b-topnav__item-link:visited {
+    color: #fff
+}
+
+.b-holiday__astronomy .b-topnav__item-link .dropdwn {
+    background-image: url(/themes/hdrezka/public/images/holiday-astronomy-menu-dropdown.png);
+    background-repeat: no-repeat;
+    background-position: 0 0
+}
+
+.b-holiday__astronomy.fixed-header .b-topnav_wrapper {
+    background-size: auto 95%
+}
+
+.b-holiday__danceday .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-dance-icon.png) no-repeat 0 0;
+    cursor: none;
+    display: block;
+    height: 31px;
+    position: absolute;
+    top: 9px;
+    left: -70px;
+    width: 28px
+}
+
+.b-holiday__danceday .b-tophead__holiday_icon:hover {
+    background-position: 0 -31px
+}
+
+.b-holiday__danceday .b-tophead__holiday_icon:hover:after {
+    content: "Международный день танца!";
+    display: block;
+    margin-top: 3px
+}
+
+.b-holiday__danceday .b-topnav_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-dance-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%
+}
+
+.b-holiday__danceday.fixed-header .b-topnav_wrapper {
+    background-image: none
+}
+
+.b-holiday__workersday .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-workers-icon.png) no-repeat 0 0;
+    display: block;
+    height: 33px;
+    position: absolute;
+    top: 5px;
+    left: -70px;
+    width: 37px
+}
+
+.b-holiday__workersday .b-tophead__holiday_icon:after {
+    -webkit-border-radius: 0;
+    -khtml-border-radius: 0;
+    -moz-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background: url(/themes/hdrezka/public/images/holiday-workers-icon-drop.png) no-repeat 50% 50%;
+    height: 37px;
+    left: -59px;
+    margin-top: 3px;
+    padding: 0;
+    width: 150px
+}
+
+.b-holiday__workersday .b-tophead__holiday_icon:hover:after {
+    display: block
+}
+
+.b-holiday__workersday .b-topnav_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-workers-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%
+}
+
+.b-holiday__workersday.fixed-header .b-topnav_wrapper {
+    background-size: auto 65%
+}
+
+.b-holiday__radioday .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-radio-icon.png) no-repeat 0 0;
+    display: block;
+    height: 24px;
+    position: absolute;
+    top: 7px;
+    left: -70px;
+    width: 39px
+}
+
+.b-holiday__radioday .b-tophead__holiday_icon:hover:after {
+    content: "День радио в России!";
+    display: block;
+    margin-top: 3px
+}
+
+.b-holiday__radioday .b-topnav_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-radio-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%
+}
+
+.b-holiday__radioday.fixed-header .b-topnav_wrapper {
+    background-size: auto 30%
+}
+
+.b-holiday__victoryww2 .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-victoryww2-logo.gif) no-repeat 0 0;
+    background-size: 100% 200%;
+    padding: 0;
+    top: 0;
+    margin-left: -175px;
+    height: 40px;
+    width: 350px;
+}
+
+.b-holiday__victoryww2 .b-tophead__logo .i-sprt {
+    display: none
+}
+
+.b-holiday__victoryww2 .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+.b-holiday__victoryww2 .b-tophead__logo:after {
+    top: 4px;
+    left: 100px
+}
+
+.b-holiday__victoryww2 .b-tophead__logo:hover:after {
+    content: "День Победы!";
+    display: block
+}
+
+.b-holiday__victoryww2 .b-tophead_wrapper {
+    background: #2d2d2d
+}
+
+.b-holiday__nurseday .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-nurse-icon.png) no-repeat 0 0;
+    display: block;
+    height: 39px;
+    position: absolute;
+    top: 0;
+    left: -70px;
+    width: 35px
+}
+
+.b-holiday__nurseday .b-tophead__holiday_icon:hover:after {
+    content: "Международный день медицинской сестры!";
+    display: block;
+    margin-top: 3px
+}
+
+.b-holiday__nurseday .b-topnav_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-nurse-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%
+}
+
+.b-holiday__nurseday.fixed-header .b-topnav_wrapper {
+    background-size: auto 30%
+}
+
+.b-holiday__familyday .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-familyday-icon.png) no-repeat 0 0;
+    display: block;
+    height: 27px;
+    position: absolute;
+    top: 6px;
+    left: -70px;
+    width: 39px
+}
+
+.b-holiday__familyday .b-tophead__holiday_icon:hover:after {
+    content: "Международный день семей!";
+    display: block;
+    margin-top: 3px
+}
+
+.b-holiday__familyday .b-topnav_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-familyday-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%;
+    background-size: auto 50%
+}
+
+.b-holiday__familyday.fixed-header .b-topnav_wrapper {
+    background-size: auto 30%
+}
+
+.b-holiday__museumday .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-museumday-icon.png) no-repeat 0 0;
+    display: block;
+    height: 31px;
+    position: absolute;
+    top: 6px;
+    left: -70px;
+    width: 33px
+}
+
+.b-holiday__museumday .b-tophead__holiday_icon:hover:after {
+    content: "Международный день музеев!";
+    display: block;
+    margin-top: 3px
+}
+
+.b-holiday__museumday .b-topnav_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-museumday-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%;
+    background-size: auto 50%
+}
+
+.b-holiday__museumday.fixed-header .b-topnav_wrapper {
+    background-size: auto 45%
+}
+
+.b-holiday__children .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-children-icon.png) no-repeat 0 0;
+    display: block;
+    height: 32px;
+    position: absolute;
+    top: 4px;
+    left: -70px;
+    width: 29px
+}
+
+.b-holiday__children .b-tophead__holiday_icon:hover:after {
+    content: "Международный день защиты детей!";
+    display: block;
+    margin-top: 3px
+}
+
+.b-holiday__environment .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-environment-icon.png) no-repeat 0 0;
+    display: block;
+    height: 32px;
+    position: absolute;
+    top: 3px;
+    left: -70px;
+    width: 23px
+}
+
+.b-holiday__environment .b-tophead__holiday_icon:hover:after {
+    content: "Всемирный день окружающей среды!";
+    display: block
+}
+
+.b-holiday__environment .b-topnav_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-environment-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%
+}
+
+.b-holiday__environment.fixed-header .b-topnav_wrapper {
+    background-size: auto 75%
+}
+
+.b-holiday__environment .b-search__form {
+    background-color: transparent
+}
+
+.b-holiday__environment .b-search__form .b-search__field {
+    background-color: rgba(255, 255, 255, 0)
+}
+
+.b-holiday__environment .b-search__form.focused {
+    background-color: #fff
+}
+
+.b-holiday__kissday .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-kissday-icon.png) no-repeat 0 0;
+    display: block;
+    height: 38px;
+    position: absolute;
+    top: 1px;
+    left: -70px;
+    width: 56px
+}
+
+.b-holiday__kissday .b-tophead__holiday_icon:hover:after {
+    content: "Всемирный день поцелуя!";
+    display: block
+}
+
+.b-holiday__kissday .b-topnav_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-kissday-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%
+}
+
+.b-holiday__kissday.fixed-header .b-topnav_wrapper {
+    background-size: auto 100%
+}
+
+.b-holiday__kissday .b-topnav__item-link {
+    font-weight: bold
+}
+
+.b-holiday__kupalanight .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-kupalanight-icon.png) no-repeat 0 0;
+    display: block;
+    height: 35px;
+    position: absolute;
+    top: 4px;
+    left: -70px;
+    width: 39px
+}
+
+.b-holiday__kupalanight .b-tophead__holiday_icon:hover:after {
+    content: "Иван Купала!";
+    display: block
+}
+
+.b-holiday__kupalanight #wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-kupalanight-bg.jpg);
+    background-repeat: no-repeat;
+    background-position: 50% 500px
+}
+
+.b-holiday__kupalanight #wrapper .b-container {
+    background-color: #fff;
+    /* padding-right: 30px; */
+    /* padding-left: 30px */
+}
+
+.b-holiday__kupalanight.b-holiday-bg-inner #wrapper {
+    background-position: 50% 140px !important
+}
+
+body.b-theme__template__night.b-holiday__kupalanight .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-kupalanight-icon.png) no-repeat 0 0;
+    display: block;
+    height: 35px;
+    position: absolute;
+    top: 4px;
+    left: -70px;
+    width: 39px
+}
+
+body.b-theme__template__night.b-holiday__kupalanight .b-tophead__holiday_icon:hover:after {
+    content: "Иван Купала!";
+    display: block
+}
+
+body.b-theme__template__night.b-holiday__kupalanight #wrapper {
+    background-image: none !important;
+    background-repeat: no-repeat;
+    background-position: 50% 500px
+}
+
+body.b-theme__template__night.b-holiday__kupalanight #wrapper .b-container {
+    background-color: transparent !important;
+    /* padding-right: 30px; */
+    /* padding-left: 30px */
+}
+
+body.b-theme__template__night.b-holiday__kupalanight.b-holiday-bg-inner #wrapper {
+    background-position: 50% 140px !important
+}
+
+.b-holiday__mountaineeringday .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-mountaineeringday-icon.png) no-repeat 0 0;
+    display: block;
+    height: 36px;
+    position: absolute;
+    top: 3px;
+    left: -70px;
+    width: 53px
+}
+
+.b-holiday__mountaineeringday .b-tophead__holiday_icon:hover:after {
+    content: "Международный день альпинизма!";
+    display: block
+}
+
+.b-holiday__mountaineeringday .b-topnav_wrapper {
+    background-image: url(/themes/hdrezka/public/images/holiday-mountaineeringday-menu-bg.png);
+    background-repeat: repeat-x;
+    background-position: 50% 100%
+}
+
+.b-holiday__mountaineeringday.fixed-header .b-topnav_wrapper {
+    background-size: auto 95%
+}
+
+.b-holiday__knowledgeday .b-tophead__holiday_icon {
+    background: url(/themes/hdrezka/public/images/holiday-knowledgeday-icon.png) no-repeat 0 0;
+    display: block;
+    height: 28px;
+    position: absolute;
+    top: 6px;
+    left: -70px;
+    width: 42px
+}
+
+.b-holiday__knowledgeday .b-tophead__holiday_icon:hover:after {
+    content: "С началом учебного года!";
+    display: block
+}
+
+.b-holiday__halloweenday .b-tophead__logo {
+    background: url(/themes/hdrezka/public/images/holiday-halloween-logo.gif) no-repeat 0 0;
+    background-size: 100% 200%;
+    padding: 0;
+    top: 0;
+    margin-left: -175px;
+    height: 40px;
+    width: 350px;
+}
+
+.b-holiday__halloweenday .b-tophead__logo .i-sprt {
+    display: none
+}
+
+.b-holiday__halloweenday .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+.b-holiday__halloweenday .b-tophead__logo:after {
+    top: 4px;
+    left: 80px
+}
+
+.b-holiday__halloweenday .b-tophead__logo:hover:after {
+    content: "Хэллоуин!";
+    display: block
+}
+
+.b-holiday__halloweenday #top-head {
+    background: #351644
+}
+
+.b-christmas .b-tophead__logo .i-sprt {
+    display: none
+}
+
+.b-christmas .b-tophead__logo:hover {
+    background-position: 0 -40px
+}
+
+@media (max-width: 660px) {
+    .b-christmas .b-tophead__logo {
+        width: 22em !important;
+        left: 25% !important;
+        margin-left: -4em !important;
+    }
+
+    .b-holiday__valentine .b-tophead__logo {
+        width: 26em !important;
+        left: 16% !important;
+        margin-left: -4em !important;
+    }
+
+    .b-holiday__23feb .b-tophead__logo {
+        width: 26em !important;
+        left: 16% !important;
+        margin-left: -4em !important;
+    }
+
+    .b-holiday__womensday .b-tophead__logo {
+        width: 26em !important;
+        left: 16% !important;
+        margin-left: -4em !important;
+    }
+
+    .b-holiday__foolsday .b-tophead__logo {
+        width: 26em !important;
+        left: 16% !important;
+        margin-left: -4em !important;
+    }
+
+    .b-holiday__easter .b-tophead__logo {
+        width: 26em !important;
+        left: 16% !important;
+        margin-left: -4em !important;
+    }
+
+    .b-holiday__victoryww2 .b-tophead__logo {
+        width: 26em !important;
+        left: 16% !important;
+        margin-left: -4em !important;
+    }
+
+    .b-holiday__halloweenday .b-tophead__logo {
+        width: 26em !important;
+        left: 16% !important;
+        margin-left: -4em !important;
+    }
+}
